@@ -1,0 +1,18 @@
+def is_amka(amka):
+    """Αλγοριθμικός έλεγχος Αριθμού Μητρώου Κοινωνικής Ασφάλισης
+
+    :param amka: string με αριθμό ΑΜΚΑ για έλεγχο
+    :return: True / False
+    """
+    amka = str(amka)
+    if len(amka) != 11 or not amka.isdigit():
+        return False
+    else:
+        amkai = [int(i) for i in amka]
+        total = amkai[10]
+        for i, digit in enumerate(amkai[:10]):
+            if (i % 2) != 0:
+                total += sum([int(i) for i in str(digit * 2)])
+            else:
+                total += digit
+        return (total % 10) == 0
