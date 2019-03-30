@@ -14,3 +14,8 @@ class TestIso2gr(TestCase):
 
     def test_gr2iso_bad(self):
         self.assertEqual('1000-01-01', grdate.gr2iso('28/022017'))
+
+    def test_gr2iso_bad2(self):
+        self.assertEqual('1000-01-01', grdate.gr2iso('28/02/12017'))
+        self.assertEqual('1000-01-01', grdate.gr2iso('281/02/2017'))
+        self.assertEqual('1000-01-01', grdate.gr2iso('28/021/2017'))

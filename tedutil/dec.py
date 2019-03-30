@@ -12,8 +12,6 @@ def is_number(value):
         float(value)
     except ValueError:
         return False
-    except TypeError:
-        return False
     else:
         return True
 
@@ -62,8 +60,6 @@ def dec2gr(poso, decimals=2):
             strposo = strposo[1:]
     val = dec(strposo, decimals)
     timi = '%s' % val
-    if val == 0:
-        prosimo = ''
     intpart, decpart = timi.split('.')
     final = triades(intpart) + ',' + decpart
     if final[0] == '.':
