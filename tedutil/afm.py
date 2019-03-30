@@ -1,7 +1,7 @@
 def is_afm(afm):
-    """Αλγοριθμικός έλεγχος Ελληνικού ΑΦΜ
+    """Algorithmic check for greek vat numbers (afm
 
-    :param afm:
+    :param afm: Greek Vat Number (9 digits)
     :return: True / False
     """
     afm = str(afm)

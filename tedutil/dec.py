@@ -21,9 +21,9 @@ def is_number(value):
 def dec(value, decimals=2):
     """Creates a proper decimal
 
-    :param value:
-    :param decimals:
-    :return:
+    :param value: number or string representing decimal
+    :param decimals: Number of decimal digits
+    :return: Python decimal number
     """
     decimals = int(decimals)
     poso = 0 if (value is None) else value
@@ -34,9 +34,9 @@ def dec(value, decimals=2):
 def dec2gr(poso, decimals=2):
     """Greek formated decimal to string
 
-    :param poso:
-    :param decimals:
-    :return:
+    :param poso: Python decimal number
+    :param decimals: Number of decimal digits
+    :return: Greek formatted decimal string
     """
     def triades(txt, separator='.'):
         ltxt = len(txt)
@@ -72,4 +72,10 @@ def dec2gr(poso, decimals=2):
 
 
 def gr2dec(strval, decimals=2):
+    """Greek decimal string to python decimal number
+
+    :param strval: Greek decimal string
+    :param decimals: Number of decimal digits
+    :return: Python decimal number
+    """
     return dec(strval.replace('.', '').replace(',', '.'), decimals)

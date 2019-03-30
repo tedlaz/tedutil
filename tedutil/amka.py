@@ -1,7 +1,7 @@
 def is_amka(amka):
-    """Αλγοριθμικός έλεγχος Αριθμού Μητρώου Κοινωνικής Ασφάλισης
+    """Algorithmic check of Greek Social Security Number (AMKA
 
-    :param amka: string με αριθμό ΑΜΚΑ για έλεγχο
+    :param amka: Greek Social security number (11 digits)
     :return: True / False
     """
     amka = str(amka)
