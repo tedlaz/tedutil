@@ -40,3 +40,9 @@ class TestDec(TestCase):
 
     def test_gr2dec(self):
         self.assertEqual(dec.dec('123456.78'), dec.gr2dec('123.456,78'))
+
+    def test_klimaka_normal(self):
+        self.assertEqual(dec.klimaka(900, [50, 50], [0, 10, 20]), dec.dec(165))
+
+    def test_klimaka_exception(self):
+        self.assertRaises(ValueError, dec.klimaka, 10, [10, 20], [10,20])

@@ -19,3 +19,24 @@ class TestIso2gr(TestCase):
         self.assertEqual('1000-01-01', grdate.gr2iso('28/02/12017'))
         self.assertEqual('1000-01-01', grdate.gr2iso('281/02/2017'))
         self.assertEqual('1000-01-01', grdate.gr2iso('28/021/2017'))
+
+    def test_date2period_end1(self):
+        self.assertEqual('2018-03-31', grdate.date2period_end('2018-01-01'))
+        self.assertEqual('2018-06-30', grdate.date2period_end('2018-04-01'))
+        self.assertEqual('2018-09-30', grdate.date2period_end('2018-07-01'))
+        self.assertEqual('2018-12-31', grdate.date2period_end('2018-10-01'))
+
+    def test_date2per1(self):
+        self.assertEqual('201711', grdate.date2per('2017-01-15', 1))  # Μήνας
+        self.assertEqual('201721', grdate.date2per('2017-01-15', 2))  # Δίμηνο
+        self.assertEqual('201731', grdate.date2per('2017-01-15', 3))  # Τρίμηνο
+        self.assertEqual('201741', grdate.date2per('2017-01-15', 4))  # Τετράμ
+        self.assertEqual('201761', grdate.date2per('2017-01-15', 6))  # Εξάμηνο
+        self.assertEqual('201711', grdate.date2per('2017-01-15', 8))  # Εκτός
+
+    def test_season1(self):
+        self.assertEqual('2017-2018', grdate.season('2017-10-01'))
+        self.assertEqual('2016-2017', grdate.season('2017-09-30'))
+        self.assertEqual('2016-2017', grdate.season('2017-10-01', 11))
+        self.assertEqual('2017-2018', grdate.season('2017-02-01', 2))
+        self.assertEqual('2016-2017', grdate.season('2017-01-30', 2))

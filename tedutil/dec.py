@@ -29,42 +29,19 @@ def dec(value, decimals=2):
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
 
 
-def dec2gr(poso, decimals=2):
+def dec2gr(poso, decimals=2, zeroAsSpace=True):
     """Greek formated decimal to string
 
     :param poso: Python decimal number
     :param decimals: Number of decimal digits
     :return: Greek formatted decimal string
     """
-    def triades(txt, separator='.'):
-        ltxt = len(txt)
-        rem = ltxt % 3
-        prec_space = 3 - rem
-        stxt = ' ' * prec_space + txt
-        a = []
-        while len(stxt) > 0:
-            a.append(stxt[:3])
-            stxt = stxt[3:]
-        a[0] = a[0].strip()
-        fval = ''
-        for el in a:
-            fval += el + separator
-        return fval[:-1]
-    if dec(poso) == 0:
-        return ''
-    prosimo = ''
-    strposo = str(poso)
-    if len(strposo) > 0:
-        if strposo[0] in '-':
-            prosimo = '-'
-            strposo = strposo[1:]
-    val = dec(strposo, decimals)
-    timi = '%s' % val
-    intpart, decpart = timi.split('.')
-    final = triades(intpart) + ',' + decpart
-    if final[0] == '.':
-        final = final[1:]
-    return prosimo + final
+    tpo = dec(poso, decimals)
+    fst = '{:,.%sf}' % decimals
+    if tpo == 0:
+        if zeroAsSpace:
+            return ''
+    return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def gr2dec(strval, decimals=2):
@@ -75,3 +52,28 @@ def gr2dec(strval, decimals=2):
     :return: Python decimal number
     """
     return dec(strval.replace('.', '').replace(',', '.'), decimals)
+
+
+def klimaka(value, scale, percent):
+    """
+
+    :param value: Decimal value
+    :param scale:  list of decimal values
+    :param percent:  List of decimal values
+    :return:
+    """
+    if len(scale) + 1 != len(percent):
+        raise ValueError
+    d100 = dec(100)
+    rest = dec(value)
+    total = dec(0)
+    for i, step in enumerate(scale):
+        if rest > step:
+            total += dec(dec(step) * dec(percent[i]) / d100)
+            rest -= step
+        else:
+            total += dec(rest * dec(percent[i]) / d100)
+            rest = 0
+            break
+    total += dec(rest * dec(percent[-1]) / d100) if rest != 0 else dec(0)
+    return total
