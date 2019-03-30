@@ -43,6 +43,7 @@ class TestDec(TestCase):
 
     def test_klimaka_normal(self):
         self.assertEqual(dec.klimaka(900, [50, 50], [0, 10, 20]), dec.dec(165))
+        self.assertEqual(dec.klimaka(10, [50, 50], [0, 10, 20]), dec.dec(0))
 
     def test_klimaka_exception(self):
         self.assertRaises(ValueError, dec.klimaka, 10, [10, 20], [10,20])

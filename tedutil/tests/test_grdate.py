@@ -25,6 +25,8 @@ class TestIso2gr(TestCase):
         self.assertEqual('2018-06-30', grdate.date2period_end('2018-04-01'))
         self.assertEqual('2018-09-30', grdate.date2period_end('2018-07-01'))
         self.assertEqual('2018-12-31', grdate.date2period_end('2018-10-01'))
+        self.assertEqual('2018-12-31', grdate.date2period_end('2018-13-01'))
+
 
     def test_date2per1(self):
         self.assertEqual('201711', grdate.date2per('2017-01-15', 1))  # Μήνας
