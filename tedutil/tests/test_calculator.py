@@ -4,6 +4,7 @@ from tedutil import calculator as clc
 
 
 mis = '''
+#  This is a test
 ?  imeromisthio meres pikat pikae
 =0 BARPERIODOY  14
 %4 PIKAT        pikat
@@ -27,6 +28,8 @@ mis = '''
 +2 TOTALFOROS   FOROSPERIODO EEAPERIODOY
 -2 PLIROTEO     FOROLOGITEO TOTALFOROS
 +2 TOTALKOSTOS  TAPODOXES IKAERDOTIS
+>2 TOTAL2       PLIROTEO TOTALKOSTOS
+^2 TOTAL2       10 11 1
 +2 TOTAL2       PLIROTEO TOTALFOROS IKATOTAL
 d2 imeromisthio
 d0 meres
@@ -34,9 +37,19 @@ d0 oresnyxta
 d0 meresargia
 '''
 
+exep1 = """
+# To test exception1
+? val1 val2
+"""
+
+exep2 = """
+# to test exception 2
+} SOMETHING
+"""
+
 
 class TestCalculator(TestCase):
-    def test_calculator(self):
+    def test_calculator_good(self):
         self.assertEqual(clc.calculator(
             mis, {'imeromisthio': 40, 'meres': 10,
                   'pikat': 44.15, 'pikae': 14.98}),
@@ -57,3 +70,9 @@ class TestCalculator(TestCase):
              'PLIROTEO': Decimal('340.08'), 'TOTALKOSTOS': Decimal('516.68'),
              'TOTAL2': Decimal('516.68')}
         )
+
+    def test_calculator_exception1(self):
+        self.assertRaises(ValueError, clc.calculator, exep1, {'val1': 15})
+
+    def test_calculator_exception2(self):
+        self.assertRaises(ValueError, clc.calculator, exep2, {'val1': 15})

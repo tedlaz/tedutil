@@ -1,5 +1,5 @@
 def iso2gr(date):
-    """
+    """Transform iso date string to greek formatted date string
 
     :param date: Iso formatted date string (yyyy-mm-dd)
     :return: Greek formatted date string (dd/mm/yyyy)
@@ -13,7 +13,7 @@ def iso2gr(date):
 
 
 def gr2iso(grdate):
-    """
+    """Transform Greek date string to iso date string
 
     :param grdate: Greek Date string
     :return: Iso Date string
