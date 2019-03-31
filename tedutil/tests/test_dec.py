@@ -47,3 +47,12 @@ class TestDec(TestCase):
 
     def test_klimaka_exception(self):
         self.assertRaises(ValueError, dec.klimaka, 10, [10, 20], [10,20])
+
+    def test_split_val_to_list1(self):
+        self.assertEqual(dec.split_val_to_list(100, [10, 20]),
+                         [dec.dec(10), dec.dec(20), dec.dec(70)])
+
+    def test_distribute1(self):
+        self.assertEqual(dec.distribute(100.37, [10.22, 20.31, 30.44, 41, 28]),
+                         [dec.dec('7.89'), dec.dec('15.68'), dec.dec('23.51'),
+                          dec.dec('31.67'), dec.dec('21.62')])

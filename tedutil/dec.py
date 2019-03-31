@@ -29,17 +29,18 @@ def dec(value, decimals=2):
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
 
 
-def dec2gr(poso, decimals=2, zeroAsSpace=True):
+def dec2gr(poso, decimals=2, zero_as_space=True):
     """Greek formated decimal to string
 
     :param poso: Python decimal number
     :param decimals: Number of decimal digits
+    :param zero_as_space: How to treat zero values
     :return: Greek formatted decimal string
     """
     tpo = dec(poso, decimals)
     fst = '{:,.%sf}' % decimals
     if tpo == 0:
-        if zeroAsSpace:
+        if zero_as_space:
             return ''
     return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
@@ -54,26 +55,58 @@ def gr2dec(strval, decimals=2):
     return dec(strval.replace('.', '').replace(',', '.'), decimals)
 
 
-def klimaka(value, scale, percent):
+def split_val_to_list(val, alist, decimals=2):
+    """Splits val according to alist values
+
+    :param val: Value to be splitted
+    :param alist: List of values
+    :param decimals: Number of decimals
+    :return: List of splitted val with length = len(alist) + 1
     """
+    lval = []
+    rest = dec(val, decimals)
+    for step in alist:
+        if rest > step:
+            lval.append(dec(step, decimals))
+            rest -= step
+        else:
+            lval.append(rest)
+            rest = 0
+    lval.append(rest)
+    return lval
+
+
+def klimaka(value, scale, percent):
+    """Calculate
 
     :param value: Decimal value
     :param scale:  list of decimal values
     :param percent:  List of decimal values
-    :return:
+    :return: Calculated value
     """
-    if len(scale) + 1 != len(percent):
+    if (len(scale) + 1) != len(percent):
         raise ValueError
-    d100 = dec(100)
-    rest = dec(value)
-    total = dec(0)
-    for i, step in enumerate(scale):
-        if rest > step:
-            total += dec(dec(step) * dec(percent[i]) / d100)
-            rest -= step
-        else:
-            total += dec(rest * dec(percent[i]) / d100)
-            rest = 0
-            break
-    total += dec(rest * dec(percent[-1]) / d100) if rest != 0 else dec(0)
-    return total
+    vall = split_val_to_list(value, scale)
+    pval = [dec(vall[i] * percent[i] / dec(100)) for i in range(len(percent))]
+    return sum(pval)
+
+
+def distribute(value, alist, decimals=2):
+    """Distributes value according alist distribution
+
+    :param value: Value to be distributed
+    :param alist: Distribution list/ tuple
+    :param decimals: Decimal places
+    :return: Distribution list
+    """
+    value = dec(value, decimals)
+    totald = dec(sum(alist), decimals)
+    dist = [dec(value * dec(i, decimals) / totald, decimals) for i in alist]
+    rest = value - sum(dist)  # if there is a diff
+    dist[dist.index(max(dist))] += rest  # add it to max value
+    return dist
+
+
+if __name__ == "__main__":
+    dis = distribute(100.37, [10.22, 20.31, 30.44, 41, 28])
+    print(dis, sum(dis))
