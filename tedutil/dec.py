@@ -105,8 +105,3 @@ def distribute(value, alist, decimals=2):
     rest = value - sum(dist)  # if there is a diff
     dist[dist.index(max(dist))] += rest  # add it to max value
     return dist
-
-
-if __name__ == "__main__":
-    dis = distribute(100.37, [10.22, 20.31, 30.44, 41, 28])
-    print(dis, sum(dis))
