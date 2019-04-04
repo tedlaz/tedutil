@@ -1,3 +1,6 @@
+"""Greek date functions"""
+
+
 def iso2gr(date):
     """Transform iso date string to greek formatted date string
 

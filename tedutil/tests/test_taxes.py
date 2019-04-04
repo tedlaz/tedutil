@@ -6,13 +6,19 @@ from tedutil import taxes as tx1
 class TestTaxes(TestCase):
     def test_foros_etoys(self):
         self.assertEqual(tx1.foros_etoys(2012, 110000), Decimal('36920'))
+        self.assertRaises(ValueError, tx1.foros_etoys, 1963, 12000)
 
     def test_meiosi_foroy(self):
         self.assertEqual(tx1.meiosi_foroy(2019, 200000, 0), Decimal('100'))
+        self.assertEqual(tx1.meiosi_foroy(2019, 1000, 5), Decimal('2100'))
+        self.assertEqual(tx1.meiosi_foroy(2019, 500000, 0), Decimal('0'))
 
     def test_foros_etoys_me_ekptosi(self):
         self.assertEqual(tx1.foros_etoys_me_ekptosi(2019, 14000),
                          Decimal('1180'))
+
+    def test_eea_etoys(self):
+        self.assertEqual(tx1.eea_etoys(1985, 1000), Decimal('0'))
 
     def test_eea_periodoy(self):
         self.assertEqual(tx1.eea_periodoy(2019, 1000, extra=100),

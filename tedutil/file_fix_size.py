@@ -1,3 +1,6 @@
+"""Create fixed size data files"""
+
+
 from enum import Enum
 from .grtext import grup
 from .dec import dec
@@ -64,8 +67,8 @@ def make_file(data):
     fin += li3.render(data['l3'])
     for lin4 in data['l4']:
         fin += li4.render(lin4)
-    with open('sss.txt', 'w', encoding='windows-1253') as fil:
-        fil.write(fin)
+    # with open('sss.txt', 'w', encoding='windows-1253') as fil:
+    #     fil.write(fin)
     return fin
 
 

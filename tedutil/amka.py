@@ -1,3 +1,6 @@
+"""Greek social security number validation functions"""
+
+
 def is_amka(amka):
     """Algorithmic check of Greek Social Security Number (AMKA
 

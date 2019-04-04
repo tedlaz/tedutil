@@ -1,3 +1,6 @@
+"""Spreadsheet like functionality"""
+
+
 from collections import defaultdict
 from decimal import Decimal
 from functools import reduce

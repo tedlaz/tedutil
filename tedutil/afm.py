@@ -1,3 +1,6 @@
+"""Greek VAT validation functions"""
+
+
 def is_afm(afm):
     """Algorithmic check for greek vat numbers (afm
 

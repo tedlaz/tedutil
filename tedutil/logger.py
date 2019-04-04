@@ -1,3 +1,5 @@
+"""Logger module"""
+
 """ Logger levels
 CRITICAL	50
 ERROR	    40

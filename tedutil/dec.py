@@ -1,3 +1,6 @@
+"""Greek decimal functions"""
+
+
 from decimal import Decimal
 from decimal import ROUND_HALF_UP
 
@@ -5,8 +8,8 @@ from decimal import ROUND_HALF_UP
 def is_number(value):
     """Checks if value is number or not
 
-    :param value:
-    :return:
+    :param value: value to be checked
+    :return: True/False
     """
     try:
         float(value)
@@ -77,7 +80,7 @@ def split_val_to_list(val, alist, decimals=2):
 
 
 def klimaka(value, scale, percent):
-    """Calculate
+    """Calculate percent of value given scale, percent rate
 
     :param value: Decimal value
     :param scale:  list of decimal values
