@@ -1,8 +1,11 @@
+import os
 from tedutil import files as fls
 from tedutil import grtext as grt
-URLF = "http://www.ika.gr/gr/infopages/downloads/osyk.zip"
-ZIPOSYK = fls.download_file(URLF)
+from tedutil.logger import logger
 
+URLF = "http://www.ika.gr/gr/infopages/downloads/osyk.zip"
+ZIPOSYK = fls.download_file(URLF, os.getcwd())
+logger.info("%s downloaded!!!" % ZIPOSYK)
 
 def eid_find(eid, fname='dn_eid.txt'):
     """Εύρεση ειδικότητας με βάση τον κωδικό
