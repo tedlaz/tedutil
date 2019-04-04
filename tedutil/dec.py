@@ -86,8 +86,9 @@ def klimaka(value, scale, percent):
     """
     if (len(scale) + 1) != len(percent):
         raise ValueError
+    dpercent = [dec(dec(i)/ dec(100), 4) for i in percent]
     vall = split_val_to_list(value, scale)
-    pval = [dec(vall[i] * percent[i] / dec(100)) for i in range(len(percent))]
+    pval = [dec(vall[i] * dpercent[i]) for i in range(len(percent))]
     return sum(pval)
 
 
