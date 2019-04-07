@@ -2,28 +2,29 @@ from unittest import TestCase
 from tedutil.file_fix_size import Row
 from tedutil.file_fix_size import Document
 from tedutil.file_fix_size import COLTYPE
+from tedutil.file_fix_size import ROWTYPE
 
 
 class TestMake_file(TestCase):
     def test_make_file(self):
-        r01 = Row(0, 'head', 0)
+        r01 = Row(0, 'head')
         r01.new_column('fnam', 8, COLTYPE.TXT)
         r01.new_column('dat', 8, COLTYPE.DAT)
         r01.new_column('cyc', 4, COLTYPE.TXT)
         r01.new_column('fil1', 148, COLTYPE.FIL)
 
-        r02 = Row(1, "stoixeia", 0)
+        r02 = Row(1, "stoixeia")
         r02.new_column('etos', 4, COLTYPE.TXT)
         r02.new_column('epon', 18, COLTYPE.TXT)
         r02.new_column('onom', 9, COLTYPE.TXT)
         r02.new_column('pat', 3, COLTYPE.TXT)
 
-        r03 = Row(2, "detail", 0)
+        r03 = Row(2, "detail")
         r03.new_column('etos', 4, COLTYPE.TXT)
         r03.new_column('poso', 12, COLTYPE.DEC)
         r03.new_column('foro', 12, COLTYPE.DEC)
 
-        r04 = Row(3, "test", 0)
+        r04 = Row(3, "test")
         r04.new_column('vatt', 12, COLTYPE.DEC)
 
         doc = Document()

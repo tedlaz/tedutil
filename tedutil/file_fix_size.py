@@ -4,6 +4,7 @@
 from enum import Enum
 from .grtext import grup
 from .dec import dec
+from .logger import logger
 
 
 class COLTYPE(Enum):
@@ -12,6 +13,11 @@ class COLTYPE(Enum):
     DEC = 2
     DAT = 3
     FIL = 4
+
+
+class ROWTYPE(Enum):
+    NORMAL = 0
+    SUM = 1
 
 
 def fill(value, size, typos):
@@ -25,7 +31,7 @@ def fill(value, size, typos):
     value = grup(str(value))
     vsize = len(value)
     if vsize > size:
-        print("Warning field size exeeds line field size")
+        logger.debug("Warning field size exeeds line field size")
         value = value[:size]
         vsize = size
     empty = size - vsize
@@ -102,7 +108,7 @@ class Column:
 
 
 class Row:
-    def __init__(self, id, name, typos):
+    def __init__(self, id, name, typos=ROWTYPE.NORMAL):
         self.id = id
         self.name = name
         self.type = typos
@@ -181,9 +187,38 @@ class Document:
         txtl = []
         for lin in self.lines:
             tname = lin['n4m']
-            if self.row_templates[tname].type == 1:
+            if self.row_templates[tname].type == ROWTYPE.SUM:
                 lin2 = {**self.totals, **lin}
                 txtl.append(self.row_templates[tname].render(lin2))
             else:
                 txtl.append(self.row_templates[tname].render(lin))
         return '\n'.join(txtl)
+
+
+class LineType:
+    def __init__(self, lid, name, typos, columns):
+        self.id = lid
+        self.name = name
+        self.typos = typos
+        self.columns = [Column(val) for val in columns]
+
+    def render(self, data):
+        pass
+
+
+class Line:
+    def __init__(self, line_type, data):
+        self.line_type = line_type
+        self.data = data
+
+    def render(self):
+        return self.line_type.render(self.data)
+
+
+def client():
+    head = LineType(1, 'header', ROWTYPE.NORMAL)
+    tot = LineType(2, 'total', ROWTYPE.SUM)
+    det = LineType(3, 'detail', ROWTYPE.NORMAL)
+    lhead = Line(head, {'name': 'ted', 'epo': 'lazaros'})
+    tot = Line(tot, {'foros': '', 'pliroteo': ''})
+    dets = Line(det, {})

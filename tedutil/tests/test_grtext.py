@@ -13,4 +13,4 @@ class TestGrup(TestCase):
         self.assertEqual(grt.grup('tst1όέίάήώύ'), 'TST1ΟΕΙΑΗΩΥ')
 
     def test_split_strip(self):
-        print(grt.split_strip('this|is|ted'))
+        self.assertEqual(grt.split_strip('this|is|ted'), ['this', 'is', 'ted'])

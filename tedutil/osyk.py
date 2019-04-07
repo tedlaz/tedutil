@@ -1,11 +1,11 @@
 import os
 from tedutil import files as fls
 from tedutil import grtext as grt
-from tedutil.logger import logger
+
 
 URLF = "http://www.ika.gr/gr/infopages/downloads/osyk.zip"
 ZIPOSYK = fls.download_file(URLF, os.getcwd())
-logger.info("%s downloaded!!!" % ZIPOSYK)
+
 
 def eid_find(eid, fname='dn_eid.txt'):
     """Εύρεση ειδικότητας με βάση τον κωδικό
@@ -141,23 +141,3 @@ def kadeidkpk_find(kad, eid, per, fname='dn_kadeidkpk.txt'):
             if int(eos) >= per >= int(apo):
                 return kad, eid, per, lkp, kpk_find(lkp, per)
     return None
-
-
-def doy_list(fname='doy.txt'):
-    """Returns a list with doys"""
-    arr = []
-    with open(fname, encoding="utf-8") as fil:
-        for lin in fil:
-            txt = u'%s' % lin.rstrip('\n')
-            arr.append(txt.split('-'))
-    return arr
-
-
-def ika_list(fname='ika.txt'):
-    """Returns a list with ika ypokatastimata"""
-    arr = []
-    with open(fname, encoding="utf-8") as fil:
-        for lin in fil:
-            txt = '%s' % lin.rstrip('\n')
-            arr.append(txt.split('-'))
-    return arr

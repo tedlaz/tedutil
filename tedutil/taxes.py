@@ -1,7 +1,9 @@
 """Various functions for tax purposes"""
 
 
-from . import dec
+from tedutil.dec import dec
+from tedutil.dec import klimaka
+from tedutil.logger import logger
 # Πριν το 2002 το νόμισμα ήταν η δραχμή
 KLI = {
     2002: ((7400, 1000, 5000, 10000), (0, 5, 15, 30, 40)),
@@ -51,7 +53,7 @@ def foros_etoys(year, yearly_income):
     if year not in KLI.keys():
         raise ValueError("Year is out of scope")
     scale, percent = KLI[year]
-    return dec.klimaka(yearly_income, scale, percent)
+    return klimaka(yearly_income, scale, percent)
 
 
 def meiosi_foroy(year, yearly_income, children):
@@ -69,13 +71,13 @@ def meiosi_foroy(year, yearly_income, children):
         total_meiosi = meiosi[-1]
     over20k = yearly_income - 20000
     if over20k <= 0:
-        return dec.dec(total_meiosi)
+        return dec(total_meiosi)
     times, rest = over20k // 1000, over20k % 1000
     rest = 1 if rest > 0 else 0
     final_meiosi = total_meiosi - (times + rest) * 10
     if final_meiosi > 0:
-        return dec.dec(final_meiosi)
-    return dec.dec(0)
+        return dec(final_meiosi)
+    return dec(0)
 
 
 def foros_etoys_me_ekptosi(year, yearly_income, children=0):
@@ -89,7 +91,7 @@ def foros_etoys_me_ekptosi(year, yearly_income, children=0):
     foros = foros_etoys(year, yearly_income)
     meion = meiosi_foroy(year, yearly_income, children)
     final = foros - meion
-    return final if final > 0 else dec.dec(0)
+    return final if final > 0 else dec(0)
 
 
 def foros_periodoy(year, apodoxes, children=0, barytis=14, extra=0):
@@ -107,7 +109,7 @@ def foros_periodoy(year, apodoxes, children=0, barytis=14, extra=0):
     tforos = foros_etoys_me_ekptosi(year, tyearly, children)
     foros = foros_etoys_me_ekptosi(year, yearly, children)
     delta = tforos - foros
-    return dec.dec(foros / dec.dec(barytis) + delta)
+    return dec(foros / dec(barytis) + delta)
 
 
 def eea_etoys(year, yearly_income):
@@ -118,9 +120,9 @@ def eea_etoys(year, yearly_income):
     :return: special tax payable
     """
     if year not in EEA.keys():
-        return dec.dec(0)
+        return dec(0)
     scale, percent = EEA[year]
-    return dec.klimaka(yearly_income, scale, percent)
+    return klimaka(yearly_income, scale, percent)
 
 
 def eea_periodoy(year, apodoxes, barytis=14, extra=0):
@@ -137,7 +139,7 @@ def eea_periodoy(year, apodoxes, barytis=14, extra=0):
     teea = eea_etoys(year, tyearly)
     eea = eea_etoys(year, yearly)
     delta = teea - eea
-    return dec.dec(eea / dec.dec(barytis) + delta)
+    return dec(eea / dec(barytis) + delta)
 
 
 def foros_eea_periodoy(year, apodoxes, barytis=14, paidia=0, extra=0):
@@ -152,6 +154,47 @@ def foros_eea_periodoy(year, apodoxes, barytis=14, paidia=0, extra=0):
     """
     foros = foros_periodoy(year, apodoxes, paidia, barytis, extra)
     eea = eea_periodoy(year, apodoxes, barytis, extra)
-    apod = dec.dec(apodoxes + extra)
+    apod = dec(apodoxes + extra)
     kath = apod - foros - eea
-    return {'foros': foros, 'eea': eea, 'apodoxes': apod, 'pliroteo': kath}
+    return {'foros': foros, 'eea': eea, 'forolog': apod, 'pliroteo': kath}
+
+
+def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
+    """Να βρούμε από τα καθαρά τα μικτά
+
+    :param year:
+    :param katharo:
+    :param pikaerg:
+    :param paidia:
+    :return:
+    """
+    synt1 = dec(1 - dec(pikaerg) / dec(100), 4)
+    mikto = dec(katharo / synt1)
+    apot = foros_eea_periodoy(year, katharo)
+
+    delta = katharo - apot['pliroteo']
+    # print(pros1, delta, apot)
+    i = 0
+    while (delta > 0):
+        i += 1
+        mikto += delta
+        ap2 = foros_eea_periodoy(year, mikto * synt1, paidia=paidia)
+        delta = katharo - ap2['pliroteo']
+        # print('-->', i)
+        if i > 100:
+            break
+    logger.info(test_apodoxes(year, mikto, pikaerg, paidia))
+    return mikto
+
+
+def test_apodoxes(year, mikto, pikaerg, paidia=0):
+    mikto = dec(mikto)
+    krika = dec(mikto * dec(pikaerg, 4) / dec(100))
+    forol = mikto - krika
+    result = foros_eea_periodoy(year, forol, paidia=paidia)
+    result['paidia'] = paidia
+    result['mikto'] = mikto
+    result['pika'] = '%s%%' % pikaerg
+    result['ika'] = krika
+    result['krat'] = result['foros'] + result['eea'] + result['ika']
+    return result

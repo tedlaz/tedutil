@@ -1,6 +1,7 @@
 from unittest import TestCase
 import os
 from tedutil import files as fls
+from tedutil.logger import logger
 
 
 class TestDownload_file(TestCase):
@@ -13,3 +14,4 @@ class TestDownload_file(TestCase):
         fdata = fls.zipfile_data(zfile, 'dn_kad.txt')
         # print(fdata)
         os.remove(zfile)
+        logger.info("File %s deleted" % zfile)

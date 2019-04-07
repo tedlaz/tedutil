@@ -27,5 +27,9 @@ class TestTaxes(TestCase):
     def test_foros_eea_periodoy(self):
         self.assertEqual(tx1.foros_eea_periodoy(2019, 1000, extra=100),
                          {'foros': Decimal('106.29'), 'eea': Decimal('5.34'),
-                          'apodoxes': Decimal('1100.00'),
+                          'forolog': Decimal('1100.00'),
                           'pliroteo': Decimal('988.37')})
+
+    def test_reverse_apodoxes(self):
+        self.assertEqual(tx1.reverse_apodoxes(2019, 1250, 16, 3),
+                         Decimal('1697.99'))
