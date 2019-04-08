@@ -19,6 +19,20 @@ def is_number(value):
         return True
 
 
+def tint(value):
+    """Creates integer number in any case
+
+    :param value: value to be converted
+    :return: int
+    """
+    try:
+        return int(float(value))
+    except ValueError:
+        return 0
+    except TypeError:
+        return 0
+
+
 def dec(value, decimals=2):
     """Creates a proper decimal
 

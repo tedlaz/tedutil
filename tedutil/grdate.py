@@ -1,4 +1,5 @@
 """Greek date functions"""
+import datetime
 
 
 def iso2gr(date):
@@ -84,3 +85,12 @@ def season(isodate, startmonth=10):
         return '%s-%s' % (year, int(year) + 1)
     else:
         return '%s-%s' % (int(year) - 1, year)
+
+
+def today(format="%Y%m%d"):
+    """Today's date in different formats
+
+    :param format: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
+    :return: current date as string
+    """
+    return datetime.datetime.now().strftime(format)

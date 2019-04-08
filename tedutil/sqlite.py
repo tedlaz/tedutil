@@ -12,9 +12,10 @@ def get_dict(sql, dbfile):
     res = None
     with sqlite3.connect(dbfile) as con:
         con.row_factory = dict_factory
-        with con.cursor() as cur:
-            cur.execute(sql)
-            res = cur.fetchall()
+        cur = con.cursor()
+        cur.execute(sql)
+        res = cur.fetchall()
+        cur.close()
     return res
 
 
@@ -28,5 +29,3 @@ def test1():
     cur.execute("select * from tst")
     print(cur.fetchall())
 
-
-test1()

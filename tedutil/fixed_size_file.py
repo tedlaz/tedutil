@@ -2,6 +2,7 @@ from enum import Enum
 from tedutil.grtext import grup
 from tedutil.dec import dec
 from tedutil.files import create_zip
+from tedutil.grdate import today
 # from tedutil.logger import logger
 
 
@@ -180,11 +181,11 @@ def create_monthly_fmy(creation_date, year, data):
     co3 = [
         ('afm', 9, COL.TXT),
         ('fi31', 1, COL.FIL),
-        ('epo', 18, COL.TXT),
-        ('ono', 9, COL.TXT),
-        ('pat', 3, COL.TXT),
+        ('epon', 18, COL.TXT),
+        ('onom', 9, COL.TXT),
+        ('patr', 3, COL.TXT),
         ('amka', 11, COL.TXT),
-        ('paid', 2, COL.INT),  # Παιδιά
+        ('paidia', 2, COL.INT),  # Παιδιά
         ('apty', 2, COL.INT),  # Τύπος αποδοχών
         ('akapod', 11, COL.DEC),
         ('krat', 10, COL.DEC),
@@ -211,22 +212,22 @@ def create_monthly_fmy(creation_date, year, data):
     return doc.render()
 
 
-if __name__ == "__main__":
+def create_myf(etos, minas, trejimo=None):
+    from tedutil.sqlite import get_dict
+    trejimo = trejimo or today()
     dat = {}
-    dat['stoixeia'] = {'year': 2019, 'cepo': 'ακτή φάραγγα', 'eo': 0,
-                       'cafm': '111222336', 'ant': 'ψαροπωλείο',
-                       'poli': 'αθήνα', 'odos': 'ηρακλέους', 'arit': 15,
-                       'tk': 13455, 'month': 1}
-    dat['details'] = [
-        {'afm': '012312312', 'epo': 'Λάζαρος', 'ono': 'Θεόδωρος',
-         'pat': 'Κωνσταντίνος', 'amka': '13080002382', 'apty': 1, 'akapod': 300,
-         'krat': 50, 'kaapod': 250, 'parfor': 20, 'eea': 10, 'paid': 1},
-        {'afm': '152325110', 'epo': 'γεωργίου', 'ono': 'δημήτριος',
-         'pat': 'Κωνσταντίνος', 'amka': '28060003671', 'apty': 1, 'akapod': 230,
-         'krat': 30, 'kaapod': 200, 'parfor': 12.34, 'eea': 3.48, 'paid': 2},
-        {'afm': '009675542', 'epo': 'αθανασόπουλος', 'ono': 'αλέξανδρος',
-         'pat': 'Κωνσταντίνος', 'amka': '20021505506', 'apty': 1, 'akapod': 445,
-         'krat': 56.49, 'kaapod': 445 - 56.49, 'parfor': 18.79},
-    ]
-    result = create_monthly_fmy('20180131', 2018, dat)
-    create_zip(result, 'malakia2.zip')
+    fil = "/home/ted/Downloads/myf-miniaia/mis.m13"
+    sql1 = "SELECT * FROM codata"
+    dat['stoixeia'] = get_dict(sql1, fil)[0]  # Only one line
+    dat['stoixeia']['year'] = etos
+    dat['stoixeia']['month'] = minas
+    sql2 = "SELECT * FROM fmy where xrisi = '%s' and id=%s" % (etos, minas)
+    dat['details'] = get_dict(sql2, fil)
+    result = create_monthly_fmy(trejimo, etos, dat)
+    tmina = '%s' % minas if minas >= 10 else '0%s' % minas
+    outfile = '/home/ted/Downloads/myf-miniaia/akti%s%s.zip' % (etos, tmina)
+    create_zip(result, outfile)
+
+
+if __name__ == "__main__":
+    create_myf(2019, 3)
