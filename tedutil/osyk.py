@@ -1,4 +1,5 @@
 import os
+from functools import lru_cache
 from tedutil import files as fls
 from tedutil import grtext as grt
 
@@ -103,6 +104,7 @@ def eid_kad_string(kad, period):
     return tsr
 
 
+@lru_cache()
 def kpk_find(kpk, per, fname='dn_kpk.txt'):
     """
     input parameters

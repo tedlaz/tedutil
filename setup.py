@@ -9,13 +9,14 @@ if sys.hexversion < 0x3040000:
 
 
 setup(name='tedutil',
-      version='0.8.7',
+      version='0.8.8',
       description='Various utility functions',
       long_description='Various utility functions',
       url='https://github.com/tedlaz/tedutil',
       keywords=["util", "Greek"],
       author='Ted Lazaros',
       author_email='tedlaz@gmail.com',
+      # install_requires=['reportlab'],
       license='GPLv3',
       packages=['tedutil'],
       classifiers=["Development Status :: 4 - Beta",

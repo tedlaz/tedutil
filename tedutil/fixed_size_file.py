@@ -1,8 +1,6 @@
 from enum import Enum
 from tedutil.grtext import grup
 from tedutil.dec import dec
-from tedutil.files import create_zip
-from tedutil.grdate import today
 # from tedutil.logger import logger
 
 
@@ -140,94 +138,3 @@ class Document:
         stt = ''
         stt += '\n'.join([r.render() for r in self.rows])
         return stt
-
-
-def create_monthly_fmy(creation_date, year, data):
-    co0 = [
-        ('fnam', 8, COL.TXT),
-        ('cdat', 8, COL.DAT),
-        ('cycl', 4, COL.TXT),
-        ('fil0', 127, COL.FIL)
-    ]
-    head = RowTyp(0, 'head', ROW.NOR, co0)
-    co1 = [
-        ('year', 4, COL.TXT),
-        ('cepo', 18, COL.TXT),
-        ('cono', 9, COL.TXT),
-        ('cpat', 3, COL.TXT),
-        ('eo', 1, COL.INT),  # επωνυμία (0) ή ονοματεώνυμο (1)
-        ('cafm', 9, COL.INT),
-        ('ant', 16, COL.TXT), # αντικείμενο
-        ('poli', 10, COL.TXT),
-        ('odos', 16, COL.TXT),
-        ('arit', 5, COL.TXT),
-        ('tk', 5, COL.INT),
-        ('month', 2, COL.INT),
-        ('fil1', 49, COL.FIL)
-    ]
-    stoixeia = RowTyp(1, 'stoixeia', ROW.NOR, co1)
-    co2 = [
-        ('akapod', 16, COL.DEC),
-        ('krat', 16, COL.DEC),
-        ('kaapod', 16, COL.DEC),
-        ('fi21', 15, COL.FI0),
-        ('parfor', 15, COL.DEC),
-        ('eea', 15, COL.DEC),
-        ('xart', 14, COL.DEC),
-        ('xoga', 13, COL.DEC),
-        ('fi22', 27, COL.FIL)
-    ]
-    totals = RowTyp(2, 'totals', ROW.SUM, co2)
-    co3 = [
-        ('afm', 9, COL.TXT),
-        ('fi31', 1, COL.FIL),
-        ('epon', 18, COL.TXT),
-        ('onom', 9, COL.TXT),
-        ('patr', 3, COL.TXT),
-        ('amka', 11, COL.TXT),
-        ('paidia', 2, COL.INT),  # Παιδιά
-        ('apty', 2, COL.INT),  # Τύπος αποδοχών
-        ('akapod', 11, COL.DEC),
-        ('krat', 10, COL.DEC),
-        ('kaapod', 11, COL.DEC),
-        ('allodapos', 1, COL.INT),
-        ('xora', 2, COL.TXT),
-        ('fsynt', 2, COL.INT),
-        ('fi32', 5, COL.FI0),
-        ('parfor', 10, COL.DEC),
-        ('eea', 10, COL.DEC),
-        ('xart', 9, COL.DEC),
-        ('xoga', 8, COL.DEC),
-        ('etanaf', 4, COL.INT),
-        ('diat', 9, COL.TXT),
-    ]
-    details = RowTyp(3, 'details', ROW.NOR, co3)
-    doc = Document()
-    doc.add(Row(head, {'fnam': 'JL10', 'cdat': creation_date, 'cycl': year}))
-    doc.add(Row(stoixeia, data['stoixeia']))
-    doc.add(Row(totals))
-    for line in data['details']:
-        line['diat'] = '0000/0000'
-        doc.add(Row(details, line))
-    return doc.render()
-
-
-def create_myf(etos, minas, trejimo=None):
-    from tedutil.sqlite import get_dict
-    trejimo = trejimo or today()
-    dat = {}
-    fil = "/home/ted/Downloads/myf-miniaia/mis.m13"
-    sql1 = "SELECT * FROM codata"
-    dat['stoixeia'] = get_dict(sql1, fil)[0]  # Only one line
-    dat['stoixeia']['year'] = etos
-    dat['stoixeia']['month'] = minas
-    sql2 = "SELECT * FROM fmy where xrisi = '%s' and id=%s" % (etos, minas)
-    dat['details'] = get_dict(sql2, fil)
-    result = create_monthly_fmy(trejimo, etos, dat)
-    tmina = '%s' % minas if minas >= 10 else '0%s' % minas
-    outfile = '/home/ted/Downloads/myf-miniaia/akti%s%s.zip' % (etos, tmina)
-    create_zip(result, outfile)
-
-
-if __name__ == "__main__":
-    create_myf(2019, 3)

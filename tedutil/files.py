@@ -69,7 +69,22 @@ def zipfile_data(zipfilename, filename, encod='CP1253'):
     return fdata.split('\n')
 
 
-def create_zip(txt_data, zip_filename, fnam='JL10', encoding='CP1253'):
-    with zipfile.ZipFile(zip_filename, 'w') as zfile:
-        zfile.writestr(fnam, txt_data.encode(encoding))
+def create_zip(txt_data, zip_filename, filename='JL10', encoding='CP1253'):
+    with zipfile.ZipFile(zip_filename, 'w') as file:
+        file.writestr(filename, txt_data.encode(encoding))
 
+
+def read_csv_file(filename, stripper='|'):
+    with open(filename, encoding="utf8") as file:
+        file_data = file.read()
+    data = []
+    for line in file_data.split('\n'):
+        if line.startswith(' ') or len(line) < 3:
+            continue
+        data.append(tuple(i.strip() for i in line.split(stripper)))
+    return data
+
+
+if __name__ == "__main__":
+    fil = "/home/ted/tmp/mis.csv"
+    print('\n'.join([str(i) for i in read_csv_file(fil)]))

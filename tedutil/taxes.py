@@ -1,9 +1,9 @@
 """Various functions for tax purposes"""
-
-
 from tedutil.dec import dec
 from tedutil.dec import klimaka
 from tedutil.logger import logger
+from tedutil.osyk import kpk_find
+from tedutil.grdate import today
 # Πριν το 2002 το νόμισμα ήταν η δραχμή
 KLI = {
     2002: ((7400, 1000, 5000, 10000), (0, 5, 15, 30, 40)),
@@ -50,6 +50,7 @@ def foros_etoys(year, yearly_income):
     :param yearly_income: yearly income
     :return: yearly tax
     """
+    year = int(year)
     if year not in KLI.keys():
         raise ValueError("Year is out of scope")
     scale, percent = KLI[year]
@@ -64,6 +65,7 @@ def meiosi_foroy(year, yearly_income, children):
     :param children: Number of children
     :return: reduction
     """
+    children = int(children)  # For calculator module compatibility
     paidia, meiosi = MEI.get(year, ((0,), (0,)))
     if children in paidia:
         total_meiosi = meiosi[children]
@@ -152,6 +154,7 @@ def foros_eea_periodoy(year, apodoxes, barytis=14, paidia=0, extra=0):
     :param extra: extra income (current period only)
     :return: dictionary of tax, special tax, payable
     """
+    year = int(year)
     foros = foros_periodoy(year, apodoxes, paidia, barytis, extra)
     eea = eea_periodoy(year, apodoxes, barytis, extra)
     apod = dec(apodoxes + extra)
@@ -168,6 +171,7 @@ def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
     :param paidia:
     :return:
     """
+    katharo = dec(katharo)
     synt1 = dec(1 - dec(pikaerg) / dec(100), 4)
     mikto = dec(katharo / synt1)
     apot = foros_eea_periodoy(year, katharo)
@@ -187,6 +191,15 @@ def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
     return mikto
 
 
+def mikta_apo_kathara(katharo, kpk, paidia=0, period=None):
+    if period is None:
+        period = today('%Y%m')
+    period = str(period)
+    pika = kpk_find(kpk, period)
+    year = period[:4]
+    return reverse_apodoxes(year, katharo, pika[2], paidia)
+
+
 def test_apodoxes(year, mikto, pikaerg, paidia=0):
     mikto = dec(mikto)
     krika = dec(mikto * dec(pikaerg, 4) / dec(100))
@@ -198,3 +211,13 @@ def test_apodoxes(year, mikto, pikaerg, paidia=0):
     result['ika'] = krika
     result['krat'] = result['foros'] + result['eea'] + result['ika']
     return result
+
+
+def kostos_misthodosias(misthos, pikaergodoti):
+    analogia_doroy = misthos / 8 * 12.5 / 12
+    analogia_epidomatos = misthos / 24
+    analogia_adeias = misthos * 2 / 25
+    mikta = misthos + analogia_doroy + analogia_epidomatos + analogia_adeias
+    ika_ergodoti = mikta * pikaergodoti / 100
+    total = mikta + ika_ergodoti
+    return total

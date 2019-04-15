@@ -46,6 +46,16 @@ def dec(value, decimals=2):
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
 
 
+def dec_with_given_digits(num):
+    stval = str(num)
+    if '.' in stval:
+        _, stdecv = stval.split('.')
+        decv = len(stdecv)
+    else:
+        decv = 0
+    return dec(num, decv)
+
+
 def dec2gr(poso, decimals=2, zero_as_space=True):
     """Greek formated decimal to string
 
@@ -123,3 +133,4 @@ def distribute(value, alist, decimals=2):
     rest = value - sum(dist)  # if there is a diff
     dist[dist.index(max(dist))] += rest  # add it to max value
     return dist
+
