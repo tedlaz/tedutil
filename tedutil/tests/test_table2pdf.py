@@ -1,12 +1,13 @@
-from tedutil.table2pdf import render2pdf
-from tedutil.files import read_csv_file
-import os
-from os.path import expanduser
-home = expanduser('~')
-pdff = os.path.join(expanduser('~'), 'tst.pdf')
 
 
 if __name__ == "__main__":
+    from tedutil.table2pdf import render2pdf
+    from tedutil.files import read_csv_file
+    import os
+    from os.path import expanduser
+
+    home = expanduser('~')
+    pdff = os.path.join(expanduser('~'), 'tst.pdf')
     data = read_csv_file("mis.csv")
     dvl = dict()
     dvl['head'] = data[0]
