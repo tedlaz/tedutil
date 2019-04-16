@@ -5,7 +5,7 @@ import hashlib
 import os
 import zipfile
 import urllib.request as ur
-from tedutil.logger import logger
+from collections import namedtuple
 BUF_SIZE = 65536
 
 
@@ -33,6 +33,7 @@ def download_file(url, directory, lazy=True):
     :param lazy: If file exists and lazy=True do nothing
     :return:
     """
+    from tedutil.logger import logger
     filename = url.split('/')[-1]
     *front, last = filename.split('.')
     oldfront = '.'.join(front) + '.' + 'old'
@@ -55,15 +56,15 @@ def download_file(url, directory, lazy=True):
     return dirfile
 
 
-def zipfile_data(zipfilename, filename, encod='CP1253'):
+def zipfile_data(zip_file, filename, encod='CP1253'):
     """
 
-    :param zipfilename: zip file name
+    :param zip_file: zip file name
     :param filename: file name inside zip file
     :param encod: encoding
     :return: text lines
     """
-    with zipfile.ZipFile(zipfilename) as zfile:
+    with zipfile.ZipFile(zip_file) as zfile:
         with zfile.open(filename) as fname:
             fdata = fname.read().decode(encod)
     return fdata.split('\n')
@@ -74,10 +75,10 @@ def create_zip(txt_data, zip_filename, filename='JL10', encoding='CP1253'):
         file.writestr(filename, txt_data.encode(encoding))
 
 
-def read_csv_file(filename, stripper='|'):
-    with open(filename, encoding="utf8") as file:
+def read_csv_file(filename, stripper='|', encoding="utf8"):
+    with open(filename, encoding=encoding) as file:
         file_data = file.read()
-    data = []
+    data = list()
     for line in file_data.split('\n'):
         if line.startswith(' ') or len(line) < 3:
             continue
@@ -85,6 +86,22 @@ def read_csv_file(filename, stripper='|'):
     return data
 
 
-if __name__ == "__main__":
-    fil = "/home/ted/tmp/mis.csv"
-    print('\n'.join([str(i) for i in read_csv_file(fil)]))
+def read_named_csv_file(filename, splitter='|', encoding="utf8"):
+    """
+
+    :param filename: csv filename with first row containing field names
+    :param splitter: split character
+    :param encoding: file encoding
+    :return: list of named tuples
+    """
+    with open(filename, encoding=encoding) as file:
+        file_data = file.read()
+    data = list()
+    data_iter = iter(file_data.split('\n'))
+    field_names = [i.strip() for i in next(data_iter).split(splitter)]
+    Row = namedtuple('Row', field_names)
+    for line in data_iter:
+        if line.startswith(' ') or len(line) < 3:
+            continue
+        data.append(Row(*[i.strip() for i in line.split(splitter)]))
+    return data

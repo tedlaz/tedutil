@@ -179,7 +179,7 @@ def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
     delta = katharo - apot['pliroteo']
     # print(pros1, delta, apot)
     i = 0
-    while (delta > 0):
+    while delta > 0:
         i += 1
         mikto += delta
         ap2 = foros_eea_periodoy(year, mikto * synt1, paidia=paidia)

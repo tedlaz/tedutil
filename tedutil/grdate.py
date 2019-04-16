@@ -87,10 +87,10 @@ def season(isodate, startmonth=10):
         return '%s-%s' % (int(year) - 1, year)
 
 
-def today(format="%Y%m%d"):
+def today(format_string="%Y%m%d"):
     """Today's date in different formats
 
-    :param format: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
+    :param format_string: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
     :return: current date as string
     """
-    return datetime.datetime.now().strftime(format)
+    return datetime.datetime.now().strftime(format_string)

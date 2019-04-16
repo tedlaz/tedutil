@@ -3,17 +3,14 @@ from collections import namedtuple
 from functools import lru_cache
 import os
 from decimal import Decimal
-# from functools import reduce
 from tedutil.dec import dec
 from tedutil.dec import is_number
 from tedutil.dec import dec_with_given_digits
-# from tedutil.decorators import memoize
 from tedutil.taxes import foros_periodoy
 from tedutil.taxes import eea_periodoy
 
 
 def calcdispatch(fn):
-    # registry = {'ERROR': fn}
     registry = dict()
 
     def register(symbol):
@@ -64,12 +61,12 @@ def calculate(alg_lines, data):
     for key, val in data.items():
         res[key.upper()] = dec_with_given_digits(val)
     for el in alg_lines:
-        # args = [dec(i) if is_number(i) else res.get(i, dec(0)) for i in el.pars]
         args = [dec(i) if is_number(i) else res[i] for i in el.pars]
         res[el.result] = dec(calc(el.operator, args), el.decimals)
     return res
 
 
+# Start creating calculator's operations
 @calcdispatch
 def calc():
     return 0
@@ -122,26 +119,13 @@ def _(alist):
 
 @calc.register('foros')
 def _(alist):
-    #2019 FOROLOGITEO PAIDIA BARYTIS-PERIODOY
+    # 2019 FOROLOGITEO PAIDIA BARYTIS-PERIODOY
     etos, forologiteo, paidia, barytis, *_ = alist
     return foros_periodoy(etos, forologiteo, paidia, barytis)
 
 
 @calc.register('eea')
 def _(alist):
-    #2019 FOROLOGITEO PAIDIA BARYTIS-PERIODOY
+    # 2019 FOROLOGITEO PAIDIA BARYTIS-PERIODOY
     etos, forologiteo, barytis, *_ = alist
     return eea_periodoy(etos, forologiteo, barytis)
-
-
-if __name__ == "__main__":
-    alg = load_algorithm('/home/ted/alg2.txt')
-    dat = {'IMEROMISTHIO': 60,
-           'meres': 25,
-           'POSOSTO-IKA': 44.15,
-           'POSOSTO-IKA-ERGAZOMENOY': 14.98,
-           'paidia': 3}
-    # print('\n'.join([f'{i.operator} {i.result} {i.pars}' for i in alg]))
-    print('\n'.join('%-30s: %9s' % (i, j)
-                    for i, j in calculate(alg, dat).items()))
-    print(calc.registered())

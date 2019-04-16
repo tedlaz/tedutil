@@ -5,57 +5,69 @@ from random import choices
 from datetime import datetime
 from tedutil.amka import is_amka
 from tedutil.afm import is_afm
-file_eponyma = "/home/ted/Documents/grnames/eponyma.csv"
-file_females = "/home/ted/Documents/grnames/sfemale.csv"
-file_males = "/home/ted/Documents/grnames/smale.csv"
+from tedutil.files import zipfile_data
 
 
-def load_names(dfile):
+def load_names(zip_file, csv_file):
+    """
+
+    :param zip_file:
+    :param csv_file:
+    :return:
+    """
     names = []
     frequency = []
-    with open(dfile, encoding="utf8") as fil:
-        for lin in fil:
-            if len(lin) < 3:
-                continue
-            name, freq, *_ = lin.strip().split(';')
-            names.append(name)
-            frequency.append(int(freq))
+    for lin in zipfile_data(zip_file, csv_file, "utf8"):
+        if len(lin) < 3:
+            continue
+        name, freq, *_ = lin.strip().split(';')
+        names.append(name)
+        frequency.append(int(freq))
     return names, frequency
 
 
-def load_surnames(dfile):
+def load_surnames(zip_file, csv_file):
+    """
+
+    :param zip_file:
+    :param csv_file:
+    :return:
+    """
     smnames = []
     sfnames = []
-    with open(dfile, encoding="utf8") as fil:
-        for lin in fil:
-            if len(lin) < 3:
-                continue
-            sna = lin.split()
-            if len(sna) == 1:
-                smnames.append(sna[0])
-                sfnames.append(sna[0])
-            else:
-                smnames.append(sna[0])
-                sfnames.append(sna[1])
+    for lin in zipfile_data(zip_file, csv_file, "utf8"):
+        if len(lin) < 3:
+            continue
+        sna = lin.split()
+        if len(sna) == 1:
+            smnames.append(sna[0])
+            sfnames.append(sna[0])
+        else:
+            smnames.append(sna[0])
+            sfnames.append(sna[1])
     return smnames, sfnames
 
 
 def distribution(alist, center, density=1):
+    """
+
+    :param alist:
+    :param center:
+    :param density:
+    :return:
+    """
     try:
         index_center = alist.index(center)
     except ValueError:
         index_center = len(alist) // 2
-    # print(index_center)
     left = alist[:index_center]
     right = alist[index_center+1:]
     len_left = len(left)
     len_right = len(right)
     mxl = max(len_left, len_right)
-    # print(left, right, mxl)
     stleft = [i+1 for i in range(mxl)][mxl-len_left:]
     rmxl = list(range(mxl))
     rmxl.reverse()
-    # print(rmxl)
     stright = [i+1 for i in rmxl][:len_right]
     stleft.append(mxl+1)
     final = stleft + stright
@@ -63,6 +75,14 @@ def distribution(alist, center, density=1):
 
 
 def distribution_range(apo, eos, center=None, density=3):
+    """
+
+    :param apo:
+    :param eos:
+    :param center:
+    :param density:
+    :return:
+    """
     points = list(range(apo, eos + 1))
     return points, distribution(points, center, density)
 
@@ -97,14 +117,26 @@ def generate_afm():
             return num
 
 
-def generate_all(number, age_apo=18, age_eos=65, center=None, density=3):
+def generate_all(zip_file, number, age_from=18, age_to=65,
+                 center=None, density=3):
+    """Generate fake Greek persons with name, surname, father and mother name
+        vat number, social sequrity number
+
+    :param zip_file: zip file containing names, male/female
+    :param number: Number of persons
+    :param age_from: Minimum age
+    :param age_to: Maximum age
+    :param center: Mean age
+    :param density: Variance
+    :return:
+    """
     year_now = datetime.now().year
-    points, dist = distribution_range(age_apo, age_eos, center, density)
+    points, dist = distribution_range(age_from, age_to, center, density)
     # print(dist)
     years = [str(abs(i - year_now))[2:] for i in points]
-    males, freq_males = load_names(file_males)
-    females, freq_females = load_names(file_females)
-    sur_males, sur_females = load_surnames(file_eponyma)
+    males, freq_males = load_names(zip_file, "smale.csv")
+    females, freq_females = load_names(zip_file, "sfemale.csv")
+    sur_males, sur_females = load_surnames(zip_file, "eponyma.csv")
     for _ in range(number):
         mf = randint(0, 1)
         if mf == 0:
@@ -123,10 +155,3 @@ def generate_all(number, age_apo=18, age_eos=65, center=None, density=3):
             father = choices(males, freq_males)[0].capitalize()
         epoon = "%s %s" % (snam, nam)
         print("%-40s %-20s %-20s %s %s" % (epoon, father, mother, amka, afm))
-
-
-if __name__ == "__main__":
-    generate_all(10, 25, 60, center=35, density=3)
-    # print(distribution(18, 29))
-    # print(distribution(18, 29, 21))
-    # print(generate_year(18, 28, 2019, 2))

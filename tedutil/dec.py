@@ -19,7 +19,7 @@ def is_number(value):
         return True
 
 
-def tint(value):
+def int_always(value):
     """Creates integer number in any case
 
     :param value: value to be converted
@@ -47,6 +47,11 @@ def dec(value, decimals=2):
 
 
 def dec_with_given_digits(num):
+    """creates a decimal with decimal digits same as input number's digits
+
+    :param num: number to transform
+    :return: decimal
+    """
     stval = str(num)
     if '.' in stval:
         _, stdecv = stval.split('.')
@@ -113,7 +118,7 @@ def klimaka(value, scale, percent):
     """
     if (len(scale) + 1) != len(percent):
         raise ValueError
-    dpercent = [dec(dec(i)/ dec(100), 4) for i in percent]
+    dpercent = [dec(dec(i) / dec(100), 4) for i in percent]
     vall = split_val_to_list(value, scale)
     pval = [dec(vall[i] * dpercent[i]) for i in range(len(percent))]
     return sum(pval)
@@ -133,4 +138,3 @@ def distribute(value, alist, decimals=2):
     rest = value - sum(dist)  # if there is a diff
     dist[dist.index(max(dist))] += rest  # add it to max value
     return dist
-

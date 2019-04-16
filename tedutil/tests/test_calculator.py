@@ -4,7 +4,7 @@ if __name__ == "__main__":
     from tedutil.calculator import load_algorithm
     from tedutil.calculator import calculate
     from tedutil.calculator import calc
-    alg = load_algorithm('algorithm.txt')
+    alg = load_algorithm('algorithm-payroll.txt')
     dat = {'IMEROMISTHIO': 60,
            'meres': 25,
            'POSOSTO-IKA': 44.15,

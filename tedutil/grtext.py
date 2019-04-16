@@ -16,11 +16,11 @@ def grup(txtval):
     return ''.join(ftxt)
 
 
-def split_strip(txt, separator='|'):
+def split_strip(text_line, separator='|'):
     """Split and strip a txt
 
-    :param txtline:
+    :param text_line:
     :param separator:
     :return:
     """
-    return [j.strip() for j in txt.strip().split(separator)]
+    return [j.strip() for j in text_line.strip().split(separator)]

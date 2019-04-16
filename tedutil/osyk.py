@@ -1,14 +1,30 @@
+"""
+
+
+
+
+        Γίνονται κλήσεις στο αρχείο πολλαπλές χωρίς λόγο
+
+        Πρέπει να γίνει διόρθωση ...
+
+
+
+"""
 import os
 from functools import lru_cache
 from tedutil import files as fls
 from tedutil import grtext as grt
-
-
 URLF = "http://www.ika.gr/gr/infopages/downloads/osyk.zip"
-ZIPOSYK = fls.download_file(URLF, os.getcwd())
 
 
-def eid_find(eid, fname='dn_eid.txt'):
+def get_osyk(file_path=None):
+    if file_path is None:
+        return fls.download_file(URLF, os.getcwd())
+    else:
+        return file_path
+
+
+def eid_find(eid, fname='dn_eid.txt', osyk=None):
     """Εύρεση ειδικότητας με βάση τον κωδικό
 
     input parameters
@@ -17,14 +33,14 @@ def eid_find(eid, fname='dn_eid.txt'):
     returns
       tuple (Κωδικός ειδικότητας, περιγραφή ειδικότητας)
     """
-    for lin in fls.zipfile_data(ZIPOSYK, fname):
+    for lin in fls.zipfile_data(get_osyk(osyk), fname):
         leid, lper, *_ = grt.split_strip(lin)
         if str(eid) == leid:
             return leid, lper
     return None
 
 
-def kad_find(kad, fname='dn_kad.txt'):
+def kad_find(kad, fname='dn_kad.txt', osyk=None):
     """Εύρεση εγγραφής ΚΑΔ με βάση τον κωδικό
 
     input parameters
@@ -35,14 +51,14 @@ def kad_find(kad, fname='dn_kad.txt'):
 
     Finds and returns record with given no
     """
-    for lin in fls.zipfile_data(ZIPOSYK, fname):
+    for lin in fls.zipfile_data(get_osyk(osyk), fname):
         lkad, lper, *_ = grt.split_strip(lin)
         if str(kad) == lkad:
             return lkad, lper
     return None
 
 
-def kad_list(kadno='', fname='dn_kad.txt'):
+def kad_list(kadno='', fname='dn_kad.txt', osyk=None):
     """
     input parameters
       kad=Κωδικός Αριθμός δραστηριότητας
@@ -52,7 +68,7 @@ def kad_list(kadno='', fname='dn_kad.txt'):
     """
     kadno = str(kadno)
     kads = []
-    for line in fls.zipfile_data(ZIPOSYK, fname):
+    for line in fls.zipfile_data(get_osyk(osyk), fname):
         if len(line) < 6:
             continue
         lkad, lper, *_ = grt.split_strip(line)
@@ -64,7 +80,7 @@ def kad_list(kadno='', fname='dn_kad.txt'):
     return kads
 
 
-def eid_kad_list(kad, per, fname='dn_kadeidkpk.txt'):
+def eid_kad_list(kad, per, fname='dn_kadeidkpk.txt', osyk=None):
     """
     input parameters
       kad=Κωδ.Αρ.Δραστηριότητας, per=Περίοδος(YYYYMM) πχ 201301
@@ -82,13 +98,13 @@ def eid_kad_list(kad, per, fname='dn_kadeidkpk.txt'):
     arr = []
     chck = {}
     i = 0
-    for lin in fls.zipfile_data(ZIPOSYK, fname):
+    for lin in fls.zipfile_data(get_osyk(osyk), fname):
         if len(lin) < 10:
             continue
         lkad, eid, kpk, apo, eos, *_ = grt.split_strip(lin)
         ckv = '%s%s' % (lkad, eid)
         if skad == lkad and (int(eos) >= per >= int(apo)) and ckv not in chck:
-            _, eidp = eid_find(eid)
+            _, eidp = eid_find(eid, osyk=osyk)
             arr.append([lkad, eid, kpk, apo, eos, eidp])
             chck[ckv] = i
             i = i + 1
@@ -105,7 +121,7 @@ def eid_kad_string(kad, period):
 
 
 @lru_cache()
-def kpk_find(kpk, per, fname='dn_kpk.txt'):
+def kpk_find(kpk, per, fname='dn_kpk.txt', osyk=None):
     """
     input parameters
       kpk=Κωδ.Πακέτου κάλυψης, per=Περίοδος(YYYMM)
@@ -114,7 +130,7 @@ def kpk_find(kpk, per, fname='dn_kpk.txt'):
       tuple (ΚΠΚ, Περιγραφή, Εργ%, Εργοδότης%, Σύνολο%, περίοδος ισχύος)
     """
     per = int(per)
-    for lin in fls.zipfile_data(ZIPOSYK, fname):
+    for lin in fls.zipfile_data(get_osyk(osyk), fname):
         if len(lin) < 15:
             continue
         lkp, nam, ikaer, ikaetis, ikat, lper, *_ = grt.split_strip(lin)
@@ -124,7 +140,7 @@ def kpk_find(kpk, per, fname='dn_kpk.txt'):
     return None
 
 
-def kadeidkpk_find(kad, eid, per, fname='dn_kadeidkpk.txt'):
+def kadeidkpk_find(kad, eid, per, file_name='dn_kadeidkpk.txt', osyk=None):
     """
     input parameters
       kad=Κωδ.Αρ.Δραστ, eid=Ειδικότητα, per=Περίοδος
@@ -132,14 +148,14 @@ def kadeidkpk_find(kad, eid, per, fname='dn_kadeidkpk.txt'):
     returns
       tuple (ΚΑΔ, ΕΙΔ, Περίοδος, ΚΠΚ, tuple(kpk_find))
     """
-    kad = str(kad)  # Make sure kad is string
-    eid = str(eid)  # Make sure eid is string
-    per = int(per)  # Make sure per is integer for comparison
-    for lin in fls.zipfile_data(ZIPOSYK, fname):
+    kad = str(kad)
+    eid = str(eid)
+    per = int(per)
+    for lin in fls.zipfile_data(get_osyk(osyk), file_name):
         if len(lin) < 10:
             continue
         lka, lei, lkp, apo, eos, *_ = grt.split_strip(lin)
         if kad == lka and eid == lei:
             if int(eos) >= per >= int(apo):
-                return kad, eid, per, lkp, kpk_find(lkp, per)
+                return kad, eid, per, lkp, kpk_find(lkp, per, osyk=osyk)
     return None

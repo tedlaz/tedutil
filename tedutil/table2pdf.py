@@ -1,5 +1,7 @@
 """ Requires reportlab (pip install reportlab)
 for ttf fonts:
+wget http://www.lucius-hartmann.ch/diverse/greekfonts/docs/alkaios_win.zip
+
 http://www.polytoniko.org/fonts.php
 https://www.keymangreek.gr/site/polytoniko.php?option=fonts
 install fonts in ~/.local/share/fonts and run:
