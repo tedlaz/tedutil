@@ -9,7 +9,7 @@ if sys.hexversion < 0x3040000:
 
 
 setup(name='tedutil',
-      version='0.9.2',
+      version='0.9.3',
       description='Various utility functions',
       long_description='Various utility functions',
       url='https://github.com/tedlaz/tedutil',
