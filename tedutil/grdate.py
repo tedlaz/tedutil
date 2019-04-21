@@ -94,3 +94,12 @@ def today(format_string="%Y%m%d"):
     :return: current date as string
     """
     return datetime.datetime.now().strftime(format_string)
+
+
+def current_period(format_string="%Y%m"):
+    """Today's date in different formats
+
+    :param format_string: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
+    :return: current date as string
+    """
+    return datetime.datetime.now().strftime(format_string)

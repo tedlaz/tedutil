@@ -6,6 +6,7 @@ import os
 import zipfile
 import urllib.request as ur
 from collections import namedtuple
+from functools import lru_cache
 BUF_SIZE = 65536
 
 
@@ -56,17 +57,18 @@ def download_file(url, directory, lazy=True):
     return dirfile
 
 
-def zipfile_data(zip_file, filename, encod='CP1253'):
+@lru_cache()
+def zipfile_data(zip_file, filename, encoding='CP1253'):
     """
 
     :param zip_file: zip file name
     :param filename: file name inside zip file
-    :param encod: encoding
+    :param encoding: encoding
     :return: text lines
     """
     with zipfile.ZipFile(zip_file) as zfile:
         with zfile.open(filename) as fname:
-            fdata = fname.read().decode(encod)
+            fdata = fname.read().decode(encoding)
     return fdata.split('\n')
 
 
