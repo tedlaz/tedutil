@@ -1,0 +1,10 @@
+DEBIT, CREDIT = 1, 2
+ACCSPLIT = '.'
+ACCTOTAL = 'total'
+HEADSP = '@'  # For file serialization
+LINSSP = '?'  # For file serialization
+COLSSP = '|'  # For file serialization
+FPA = '54.00'
+GOO = '2'
+EXP = '6'
+INC = '7'

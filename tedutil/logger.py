@@ -1,6 +1,6 @@
 """Logger module"""
 
-""" Logger levels
+""" Logger levels.py
 CRITICAL	50
 ERROR	    40
 WARNING	30

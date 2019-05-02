@@ -3,6 +3,9 @@ from random import randint
 from random import choice
 from random import choices
 from datetime import datetime
+from datetime import date
+from datetime import timedelta
+from collections import namedtuple
 from tedutil.amka import is_amka
 from tedutil.afm import is_afm
 from tedutil.files import zipfile_data
@@ -117,6 +120,40 @@ def generate_afm():
             return num
 
 
+def generate_afms(number_of_afms):
+    """Generate greek afms
+
+    :param number_of_afms:
+    :return:
+    """
+    afms = []
+    for _ in range(number_of_afms):
+        afms.append(generate_afm())
+    return afms
+
+
+def generate_dates(date_from, date_to, number_of_dates):
+    fyear, fmonth, fday = [int(i) for i in date_from.split('-')]
+    tyear, tmonth, tday = [int(i) for i in date_to.split('-')]
+    dfrom = date(fyear, fmonth, fday)
+    dto = date(tyear, tmonth, tday)
+    delta = dto - dfrom
+    dates = []
+    for _ in range(number_of_dates):
+        num = randint(0, delta.days)
+        dat = dfrom + timedelta(days=num)
+        dates.append(dat.isoformat())
+    dates.sort()
+    return dates
+
+
+def generate_values(number_of_values, min_val, maxval):
+    vals = []
+    for _ in range(number_of_values):
+        vals.append(randint(min_val, maxval) / 100)
+    return vals
+
+
 def generate_all(zip_file, number, age_from=18, age_to=65,
                  center=None, density=3):
     """Generate fake Greek persons with name, surname, father and mother name
@@ -155,3 +192,26 @@ def generate_all(zip_file, number, age_from=18, age_to=65,
             father = choices(males, freq_males)[0].capitalize()
         epoon = "%s %s" % (snam, nam)
         print("%-40s %-20s %-20s %s %s" % (epoon, father, mother, amka, afm))
+
+
+def generate_financial(date_from, date_to, number, afm_num,
+                       min_value=1, max_value=100):
+    """
+
+    :param date_from:
+    :param date_to:
+    :param number:
+    :param afm_num:
+    :param min_value:
+    :param max_value:
+    :return:
+    """
+    afms = generate_afms(afm_num)
+    dates = generate_dates(date_from, date_to, number)
+    amounts = generate_values(number, min_value*100, max_value*100)
+    vals = []
+    Vals = namedtuple('Vals', "date par val afm")
+    for i in range(number):
+        afm = choice(afms)
+        vals.append(Vals(dates[i], i + 1, amounts[i], afm))
+    return vals

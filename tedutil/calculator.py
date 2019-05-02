@@ -108,13 +108,18 @@ def _(arg):
 @calc.register('>')
 def _(arglist):
     dif = arglist[0] - arglist[1]
-    return dif if dif > 0 else 0
+    return dif if dif > 0 else dec(0)
 
 
 @calc.register('^')
 def _(alist):
+    """Threshold
+    if abs(a-b) > c return abs(a-b) else return 0
+    :param alist:
+    :return:
+    """
     dif = abs(alist[0] - alist[1])
-    return dif if dif >= alist[2] else 0
+    return dif if dif > alist[2] else dec(0)
 
 
 @calc.register('foros')

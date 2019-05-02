@@ -77,6 +77,15 @@ def dec2gr(poso, decimals=2, zero_as_space=True):
     return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def dic2gr(dic_of_decimals):
+    """
+
+    :param dic_of_decimals:
+    :return: Greek formatted (decimal(2) or space if zero) dec values
+    """
+    return {key: dec2gr(val) for key, val in dic_of_decimals.items()}
+
+
 def gr2dec(strval, decimals=2):
     """Greek decimal string to python decimal number
 
@@ -138,3 +147,13 @@ def distribute(value, alist, decimals=2):
     rest = value - sum(dist)  # if there is a diff
     dist[dist.index(max(dist))] += rest  # add it to max value
     return dist
+
+
+def dic_print(dic, format="%-30s: %12s"):
+    """Print dictionary's keys : values
+
+    :param dic: Dictionary to be printed
+    :param format: Format string
+    :return: Nothing
+    """
+    print('\n'.join(format % (i, j) for i, j in dic.items()))

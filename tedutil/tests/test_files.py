@@ -23,5 +23,6 @@ class TestDownload_file(TestCase):
         data = fls.read_named_csv_file(filename)
         Row = namedtuple('Row', "no date name sex age")
         vls = [Row('1', '2019-02-17', 'mark', 'male', '26'),
-               Row('2', '2019-02-18', 'mary', 'female', '19')]
+               Row('2', '2019-02-18', 'mary', 'female', '19'),
+               Row('3', '2019-03-21', 'ted', 'male', '57')]
         self.assertEqual(data, vls)

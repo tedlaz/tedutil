@@ -107,3 +107,14 @@ def read_named_csv_file(filename, splitter='|', encoding="utf8"):
             continue
         data.append(Row(*[i.strip() for i in line.split(splitter)]))
     return data
+
+
+def file2data(file_name, encoding='utf8'):
+    with open(file_name, encoding=encoding) as fil:
+        data = fil.read()
+    return data
+
+
+def write2file(data, file_name, encoding='utf8'):
+    with open(file_name, 'w', encoding=encoding) as fil:
+        fil.write(data)

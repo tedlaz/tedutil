@@ -1,6 +1,17 @@
 """Greek date functions"""
 import datetime
 
+MONTHGR = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάϊος",
+           "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος",
+           "Νοέμβριος", "Δεκέμβριος"]
+MONTHPGR = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου",
+            "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου",
+            "Νοεμβρίου", "Δεκεμβρίου"]
+DAYGR = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο",
+         "Κυριακή"]
+DAYPGR = ["Δευτέρας", "Τρίτης", "Τετάρτης", "Πέμπτης", "Παρασκευής",
+          "Σαββάτου", "Κυριακής"]
+
 
 def iso2gr(date):
     """Transform iso date string to greek formatted date string
@@ -90,7 +101,7 @@ def season(isodate, startmonth=10):
 def today(format_string="%Y%m%d"):
     """Today's date in different formats
 
-    :param format_string: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
+    :param format_string: "%Y%m%d","%Y-%m-%d","%d/%m/%Y" ,"%Y-%m-%d %H:%M:%S"
     :return: current date as string
     """
     return datetime.datetime.now().strftime(format_string)
@@ -99,7 +110,21 @@ def today(format_string="%Y%m%d"):
 def current_period(format_string="%Y%m"):
     """Today's date in different formats
 
-    :param format_string: "%Y%m%d", "%Y-%m-%d", "%d/%m/%Y" , "%Y-%m-%d %H:%M:%S"
+    :param format_string: "%Y%m%d","%Y-%m-%d","%d/%m/%Y" ,"%Y-%m-%d %H:%M:%S"
     :return: current date as string
     """
     return datetime.datetime.now().strftime(format_string)
+
+
+def date_in_interval(date, date_from=None, date_to=None):
+    if date_from:
+        if date_from > date:
+            return False
+    if date_to:
+        if date_to < date:
+            return False
+    return True
+
+
+def date_out_of_interval(date, date_from=None, date_to=None):
+    return not date_in_interval(date, date_from, date_to)
