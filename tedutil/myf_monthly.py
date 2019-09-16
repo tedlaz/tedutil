@@ -1,4 +1,6 @@
-"""Για να χρησιμοποιηθεί με την sqlite μισθοδοσία θα πρέπει να υπάρχουν τα
+"""  Δημιουργία μηνιαίου αρχείου Φόρου Μισθωτών Υπηρεσιών
+
+   Για να χρησιμοποιηθεί με την sqlite μισθοδοσία θα πρέπει να υπάρχουν τα
    παρακάτω views :
 
 CREATE VIEW fmy AS
@@ -27,7 +29,7 @@ select cop as cepo, 0 as eo, afm as cafm, dra as ant,
        pol as poli, odo as odos, num as arit, tk
 from m12_co
 """
-
+import os
 from tedutil.fixed_size_file import ROW
 from tedutil.fixed_size_file import COL
 from tedutil.fixed_size_file import RowTyp
@@ -108,21 +110,36 @@ def create_monthly_fmy(creation_date, year, data):
     return doc.render()
 
 
-def create_myf(etos, minas, trejimo=None):
+def myf_monthly(etos, minas, dbfile, coname, trejimo=None):
+    """
+        etos: Χρήση 
+        minas: Μήνας (τιμές από 1 έως 12)
+        coname: Συντομογραφία ονόματος εταιρίας
+        trejimo: Ημερομηνία δημιουργίας που θα φαίνεται στο αρχείο
+                 Αν είναι None τότε θα πάρει την τρέχουσα ημερομηνία
+    """
+    if not os.path.isfile(dbfile):
+        print('file %s does not exist' % dbfile)
+        return
+    dirname = os.path.dirname(dbfile)
     trejimo = trejimo or today()
     dat = {}
-    fil = "/home/ted/Documents/myf-miniaia/mis.m13"
+    # fil = "/home/ted/Documents/myf-miniaia/mis.m13"
     sql1 = "SELECT * FROM codata"
-    dat['stoixeia'] = get_dict(sql1, fil)[0]  # Only one line
+    dat['stoixeia'] = get_dict(sql1, dbfile)[0]  # Only one line
     dat['stoixeia']['year'] = etos
     dat['stoixeia']['month'] = minas
     sql2 = "SELECT * FROM fmy where xrisi = '%s' and id=%s" % (etos, minas)
-    dat['details'] = get_dict(sql2, fil)
+    dat['details'] = get_dict(sql2, dbfile)
     result = create_monthly_fmy(trejimo, etos, dat)
     tmina = '%s' % minas if minas >= 10 else '0%s' % minas
-    outfile = '/home/ted/Downloads/akti%s%s.zip' % (etos, tmina)
-    create_zip(result, outfile)
+    # outfile = '/home/ted/Downloads/akti%s%s.zip' % (etos, tmina)
+    outfile = f'myf-{coname}-{etos}{tmina}.zip'
+    outpath = os.path.join(dirname, outfile)
+    print(outpath)
+    create_zip(result, outpath)
 
 
 if __name__ == "__main__":
-    create_myf(etos=2019, minas=2)
+    fil = "/home/ted/Documents/myf-miniaia/mis.m13"
+    myf_monthly(etos=2019, minas=2, dbfile=fil)
