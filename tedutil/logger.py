@@ -1,11 +1,11 @@
 """Logger module"""
 
 """ Logger levels.py
-CRITICAL	50
-ERROR	    40
-WARNING	30
-INFO	    20
-DEBUG	    10
+CRITICAL 50
+ERROR    40
+WARNING  30
+INFO     20
+DEBUG    10
 """
 import logging
 

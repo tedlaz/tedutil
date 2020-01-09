@@ -112,7 +112,7 @@ def create_monthly_fmy(creation_date, year, data):
 
 def myf_monthly(etos, minas, dbfile, coname, trejimo=None):
     """
-        etos: Χρήση 
+        etos: Χρήση
         minas: Μήνας (τιμές από 1 έως 12)
         coname: Συντομογραφία ονόματος εταιρίας
         trejimo: Ημερομηνία δημιουργίας που θα φαίνεται στο αρχείο
@@ -141,5 +141,5 @@ def myf_monthly(etos, minas, dbfile, coname, trejimo=None):
 
 
 if __name__ == "__main__":
-    fil = "/home/ted/Documents/myf-miniaia/mis.m13"
-    myf_monthly(etos=2019, minas=2, dbfile=fil)
+    fil = "/home/ted/Documents/pelates/spartiotis/myf-miniaia/mis.m13"
+    myf_monthly(etos=2019, minas=12, dbfile=fil)
