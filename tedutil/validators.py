@@ -36,6 +36,7 @@ def is_amka(amka):
 
 
 def is_not_zero(value):
+    """Not zero validator"""
     if value == 0:
         return False
     return True
