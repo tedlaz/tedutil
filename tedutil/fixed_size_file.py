@@ -1,140 +1,288 @@
-from enum import Enum
-from tedutil.grtext import grup
-from tedutil.dec import dec
-# from tedutil.logger import logger
+from decimal import Decimal as dec
+import os
 
 
-class COL(Enum):
-    """FIL is special because it is always empty"""
-    TXT = 0  # text
-    INT = 1  # integer
-    DEC = 2  # decimal
-    DAT = 3  # date
-    FIL = 4  # filler with spaces
-    FI0 = 5  # filler with zeroes
+def grup(txtval):
+    """Trasforms a string to uppercase special for Greek comparison
+
+    :param txtval:
+    :return:
+    """
+    ar1 = "ΆΈΉΐΊΌΰΎΏ"
+    ar2 = "ΑΕΗΪΙΟΫΥΩ"
+    ftxt = list(str(txtval).upper())
+    for i, letter in enumerate(ftxt):
+        if letter in ar1:
+            ftxt[i] = ar2[ar1.index(letter)]
+    return ''.join(ftxt)
 
 
-class ROW(Enum):
-    """If SUM then row is actually a sum row"""
-    NOR = 0  # Normal
-    SUM = 1  # Sum
+class FixedSizeField:
+    """""Abstract class"""""
+
+    def __init__(self, siz):
+        self.length = siz
+
+    def text(self, val):
+        raise NotImplemented
+
+    def revert(self, textVal):
+        raise NotImplemented
 
 
-class ColumnTyp:
-    """Column type """
-    def __init__(self, data):
-        self.name, self.size, self.typ, *_ = data
+class StaticField(FixedSizeField):
+    """Just a fixed value ABCD -> ABCD """
 
-    def render(self, cval):
-        """Column rendering occurs here
+    def __init__(self, val):
+        self.val = grup(val)
+        super().__init__(len(self.val))
 
-        :param cval: value to render
-        :return: String
-        """
-        tst = grup(str(cval))
-        dif = self.size - len(tst)
-        if self.typ == COL.FIL:
-            return ' ' * self.size
-        elif self.typ == COL.FI0:
-            return '0' * self.size
-        elif self.typ == COL.TXT:
-            return (tst[:self.size]) if dif < 0 else tst + (' ' * dif)
-        elif self.typ == COL.DAT:
-            return (tst[:self.size]) if dif < 0 else tst + (' ' * dif)
-        elif self.typ == COL.INT:
-            return ('0' * self.size) if dif < 0 else ('0' * dif) + tst
-        elif self.typ == COL.DEC:
-            inte, deci = str(dec(cval)).split(".")
-            indc = inte + deci
-            dif2 = self.size - len(indc)
-            return indc[:self.size] if dif2 < 0 else ('0' * dif2) + indc
-        return None
+    def text(self, _):
+        return self.val
 
-    def __str__(self):
-        return "%-30s %3s %20s" % (self.name, self.size, self.typ)
+    def revert(self, txtval):
+        assert txtval == self.val
+        return txtval
 
 
-class RowTyp:
-    def __init__(self, lid, name, typ, columntypes):
-        self.id = lid
-        self.name = name
-        self.typ = typ
-        self.columns = [ColumnTyp(data) for data in columntypes]
+class Filler(FixedSizeField):
+    """Fill with a specific char"""
 
-    def render(self, data):
-        """It actually renders the row
+    def __init__(self, siz, val):
+        super().__init__(siz)
+        self.val = str(val)
 
-        :param data: dictionary of data
-        :return: String
-        """
-        stt = f'{self.id}'
-        for col in self.columns:
-            val = data.get(col.name, '')
-            stt += col.render(val)
-        return stt
+    def text(self, _):
+        return self.val * self.length
 
-    def __str__(self):
-        stt = f"RowTyp id: {self.id} name: {self.name} typ: {self.typ}\n"
-        stt += "columns: \n"
-        stt += '\n'.join(col.__str__() for col in self.columns)
-        return stt
-
-    def size(self):
-        """Returns the size of row"""
-        return len(str(self.id)) + sum([i.size for i in self.columns])
+    def revert(self, txtval):
+        return txtval[0]
 
 
-class Row:
-    def __init__(self, row_typ, data=None):
-        self.row_typ = row_typ
-        self.data = data or {}
+class ZeroesTextField(FixedSizeField):
+    """ 123 -> '0000123' """
 
-    def render(self):
-        """Passes rendering to RowTyp"""
-        return self.row_typ.render(self.data)
+    def text(self, val):
+        txt = str(val)
+        txt_len = len(txt)
+        if txt_len > self.length:
+            raise ValueError('text length is bigger than allowed')
+        zeroes = '0' * (self.length - txt_len)
+        return zeroes + txt
 
-    def size(self):
-        """Returns the size of the final row"""
-        return len(self.render())
+    def revert(self, txtval):
+        return txtval.strip().lstrip('0')
 
 
-class Document:
-    """Document object"""
+class Decimal2Field(FixedSizeField):
+    """Decimal with 2 decimal digits 123.45 -> '0000012345' """
+
+    def text(self, val):
+        txt = str(round(dec(val), 2)).replace('.', '')
+        txt_len = len(txt)
+        if txt_len > self.length:
+            raise ValueError('text length is bigger than allowed')
+        zeroes = '0' * (self.length - txt_len)
+        return zeroes + txt
+
+    def revert(self, txtval):
+        return round(dec(txtval.strip().lstrip('0')) / dec(100), 2)
+
+
+class TextSpacesField(FixedSizeField):
+    """ 'abc' -> 'abc    ' """
+
+    def text(self, val):
+        txt = grup(val)
+        txt_len = len(txt)
+        if txt_len > self.length:
+            raise ValueError('text length is bigger than allowed')
+        spaces = ' ' * (self.length - txt_len)
+        return txt + spaces
+
+    def revert(self, txtval):
+        return txtval.strip()
+
+
+class SpacesTextField(FixedSizeField):
+    """ 'abc' -> '    abc' """
+
+    def text(self, val):
+        txt = grup(val)
+        txt_len = len(txt)
+        if txt_len > self.length:
+            raise ValueError('text length is bigger than allowed')
+        spaces = ' ' * (self.length - txt_len)
+        return spaces + txt
+
+    def revert(self, txtval):
+        return txtval.strip()
+
+
+class Date2dmyField(FixedSizeField):
+    """Iso date to text YYYY-MM-DD -> DDMMYYYY """
+
     def __init__(self):
-        self.rows = []
-        self.totals = {}
+        super().__init__(8)
 
-    def add(self, row):
-        """Adds a new row and calculates self.totals
-           for decimal and integer values
+    def text(self, isodate):
+        assert len(isodate) == 10
+        year, month, day = isodate.split('-')
+        return f'{day}{month}{year}'
 
-        :param row: a Row instance
-        """
-        self.rows.append(row)
-        if row.row_typ == ROW.SUM:
-            return
-        for col in row.row_typ.columns:
-            if col.typ == COL.INT:
-                val = row.data.get(col.name, 0)
-                self.totals[col.name] = self.totals.get(col.name, 0) + int(val)
-            elif col.typ == COL.DEC:
-                val = dec(row.data.get(col.name, 0))
-                self.totals[col.name] = self.totals.get(col.name, 0) + val
+    def revert(self, txtval):
+        day = txtval[:2]
+        month = txtval[2:4]
+        year = txtval[4:]
+        return f'{year}-{month}-{day}'
 
-    def calc_totals(self):
-        """Inserts totals in rows with ROWTYPE.SUM
-            totals are already calculated during add()
-        """
-        for row in self.rows:
-            if row.row_typ.typ != ROW.SUM:
-                continue
-            for col in row.row_typ.columns:
-                if col.typ in (COL.DEC, COL.INT):
-                    row.data[col.name] = self.totals.get(col.name, 0)
 
-    def render(self):
-        """Renders the final text"""
-        self.calc_totals()
-        stt = ''
-        stt += '\n'.join([r.render() for r in self.rows])
-        return stt
+class Date2ymdField(FixedSizeField):
+    """Iso date to text YYYY-MM-DD -> YYYYMMDD """
+
+    def __init__(self):
+        super().__init__(8)
+
+    def text(self, isodate):
+        assert len(isodate) == 10
+        year, month, date = isodate.split('-')
+        return f'{year}{month}{date}'
+
+    def revert(self, txtval):
+        year = txtval[:4]
+        month = txtval[4:6]
+        day = txtval[6:]
+        return f'{year}-{month}-{day}'
+
+
+def fld(fname, **pars):
+    """Factory to create fields
+
+    Args:
+        fname (str): static(val), fill(siz, val), dec2(siz), _txt(siz), txt_(siz), dmy(), ymd()
+        **pars: possible values are len, val
+    Returns:
+        FixedSizeField:
+    """
+    flds = {
+        'static': StaticField,
+        'fill': Filler,
+        'dec2': Decimal2Field,
+        '_txt': SpacesTextField,
+        'txt_': TextSpacesField,
+        'dmy': Date2dmyField,
+        'ymd': Date2ymdField
+    }
+    if fname in flds:
+        return flds[fname](**pars)
+    return ValueError(f'name {fname} is not valid')
+
+
+class LinePrototype:
+    """This is how line is constructed"""
+
+    def __init__(self, line_code, line_per):
+        self.code = str(line_code)
+        self.per = line_per
+        self.fields = []
+        self.names = []
+        self.labels = []
+
+    def add_field(self, name, field_object, label=None):
+        if name in self.names:
+            raise ValueError(f'name {name} already exists')
+        self.names.append(name)
+        self.fields.append(field_object)
+        if label is None:
+            self.labels.append(name)
+        else:
+            self.labels.append(label)
+
+    def revert(self, textval):
+        assert len(textval) == self.line_size
+        fdi = {'lineid': self.code}
+        clean_val = textval[len(self.code):]
+        step = 0
+        for i, name in enumerate(self.names):
+            txval = clean_val[step:step+self.fields[i].length]
+            fdi[name] = self.fields[i].revert(txval)
+            step += self.fields[i].length
+        return fdi
+
+    @property
+    def number_of_fields(self):
+        return len(self.fields)
+
+    @property
+    def line_size(self):
+        tot = len(self.code)
+        for field in self.fields:
+            tot += field.length
+        return tot
+
+    def __str__(self):
+        return (
+            f'{self.per} με κωδικό {self.code} και πεδία {self.names} '
+            f'συνολικού μεγέθους {self.line_size} χαρακτήρων'
+        )
+
+
+class DataLine:
+    def __init__(self, line_prototype, valdic=None):
+        self.prototype = line_prototype
+        self.values = {}
+        if valdic:
+            self.add_vals(valdic)
+
+    def add_val(self, name, value):
+        if name not in self.prototype.names:
+            raise ValueError(f'Invalid name {name}')
+        self.values[name] = value
+
+    def add_vals(self, nvdic):
+        for name, value in nvdic.items():
+            self.add_val(name, value)
+
+    def text(self):
+        txt = self.prototype.code
+        for i, name in enumerate(self.prototype.names):
+            txt += self.prototype.fields[i].text(self.values.get(name, ''))
+        return txt
+
+
+class TextFile:
+    def __init__(self, protolinesdic):
+        """first protoline is header, last is footer"""
+        self.protolines = protolinesdic
+        self.lines = []
+
+    @property
+    def line_signs(self):
+        sig = {}
+        for proto in self.protolines.values():
+            sig[proto.code] = proto
+        return sig
+
+    def add_line(self, protoline_key, linedic=None):
+        self.lines.append(DataLine(self.protolines[protoline_key], linedic))
+
+    def text(self):
+        return '\n'.join([l.text() for l in self.lines])
+
+    def text2file(self, filename, encoding='WINDOWS-1253'):
+        if os.path.exists(filename):
+            raise FileExistsError(f'file {filename} already exists.')
+        with open(filename, 'w', encoding='WINDOWS-1253') as fil:
+            fil.write(self.text())
+        return True
+
+    def revert(self, txt_lines):
+        lines = txt_lines.split('\n')
+        result = []
+        for line in lines:
+            for sign, protoline in self.line_signs.items():
+                if line.startswith(sign):
+                    adi = protoline.revert(line)
+                    if adi:
+                        result.append(adi)
+        return result

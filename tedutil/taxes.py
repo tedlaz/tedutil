@@ -1,8 +1,6 @@
 """Various functions for tax purposes"""
 from tedutil.dec import dec
 from tedutil.dec import klimaka
-from tedutil.logger import logger
-from tedutil.osyk import kpk_find
 from tedutil.grdate import today
 # Πριν το 2002 το νόμισμα ήταν η δραχμή
 KLI = {
@@ -187,15 +185,13 @@ def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
         # print('-->', i)
         if i > 100:
             break
-    logger.info(test_apodoxes(year, mikto, pikaerg, paidia))
     return mikto
 
 
-def mikta_apo_kathara(katharo, kpk, paidia=0, period=None):
+def mikta_apo_kathara(katharo, pika, paidia=0, period=None):
     if period is None:
         period = today('%Y%m')
     period = str(period)
-    pika = kpk_find(kpk, period)
     year = period[:4]
     return reverse_apodoxes(year, katharo, pika[2], paidia)
 

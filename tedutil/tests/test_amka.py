@@ -1,5 +1,5 @@
 from unittest import TestCase
-from tedutil import amka
+from tedutil import validators as amka
 
 
 class TestAmka(TestCase):

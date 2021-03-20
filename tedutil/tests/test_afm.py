@@ -1,5 +1,5 @@
 from unittest import TestCase
-from tedutil import afm
+from tedutil import validators as afm
 
 
 class TestAfm(TestCase):
