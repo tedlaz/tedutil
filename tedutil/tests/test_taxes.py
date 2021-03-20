@@ -33,3 +33,21 @@ class TestTaxes(TestCase):
     def test_reverse_apodoxes(self):
         self.assertEqual(tx1.reverse_apodoxes(2019, 1250, 16, 3),
                          Decimal('1697.99'))
+
+    def test_apodoxes(self):
+
+        result = {
+            'foros': Decimal('5.09'),
+            'eea': Decimal('0.00'),
+            'forolog': Decimal('640.00'),
+            'pliroteo': Decimal('634.91'),
+            'paidia': 0,
+            'mikto': Decimal('800.00'),
+            'pika': '20%',
+            'ika': Decimal('160.00'),
+            'krat': Decimal('165.09')
+        }
+        self.assertEqual(tx1.test_apodoxes(2019, 800, 20, paidia=0), result)
+
+    def test_kostos_misthodosias(self):
+        self.assertEqual(tx1.kostos_misthodosias(800, 20), 1201.8)

@@ -42,3 +42,6 @@ class TestIso2gr(TestCase):
         self.assertEqual('2016-2017', grdate.season('2017-10-01', 11))
         self.assertEqual('2017-2018', grdate.season('2017-02-01', 2))
         self.assertEqual('2016-2017', grdate.season('2017-01-30', 2))
+
+    def test_date_in_interval(self):
+        self.assertTrue(grdate.date_in_interval('2020-01-12', '2020-01-10', '2020-01-12'))
