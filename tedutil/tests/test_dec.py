@@ -56,3 +56,10 @@ class TestDec(TestCase):
         self.assertEqual(dec.distribute(100.37, [10.22, 20.31, 30.44, 41, 28]),
                          [dec.dec('7.89'), dec.dec('15.68'), dec.dec('23.51'),
                           dec.dec('31.67'), dec.dec('21.62')])
+
+    def test_int_always(self):
+        self.assertEqual(dec.int_always(100.3), 100)
+        self.failureException(dec.int_always('35'))
+
+    def test_dec_with_given_digits(self):
+        self.assertEqual(dec.dec_with_given_digits('100.236'), dec.dec(100.236, 3))

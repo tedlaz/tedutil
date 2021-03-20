@@ -33,10 +33,3 @@ def is_amka(amka):
             else:
                 total += digit
         return (total % 10) == 0
-
-
-def is_not_zero(value):
-    """Not zero validator"""
-    if value == 0:
-        return False
-    return True
