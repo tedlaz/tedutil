@@ -193,7 +193,7 @@ def mikta_apo_kathara(katharo, pika, paidia=0, period=None):
         period = today('%Y%m')
     period = str(period)
     year = period[:4]
-    return reverse_apodoxes(year, katharo, pika[2], paidia)
+    return reverse_apodoxes(year, katharo, pika, paidia)
 
 
 def test_apodoxes(year, mikto, pikaerg, paidia=0):

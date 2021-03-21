@@ -13,7 +13,6 @@ class TestDec(TestCase):
     def test_is_num_float2(self):
         self.assertEqual(False, dec.is_number('13.243.2'))
 
-
     def test_zero_string_equals_zero(self):
         self.assertEqual(0, dec.dec(''))
 
@@ -46,7 +45,7 @@ class TestDec(TestCase):
         self.assertEqual(dec.klimaka(10, [50, 50], [0, 10, 20]), dec.dec(0))
 
     def test_klimaka_exception(self):
-        self.assertRaises(ValueError, dec.klimaka, 10, [10, 20], [10,20])
+        self.assertRaises(ValueError, dec.klimaka, 10, [10, 20], [10, 20])
 
     def test_split_val_to_list1(self):
         self.assertEqual(dec.split_val_to_list(100, [10, 20]),
@@ -62,4 +61,15 @@ class TestDec(TestCase):
         self.failureException(dec.int_always('35'))
 
     def test_dec_with_given_digits(self):
-        self.assertEqual(dec.dec_with_given_digits('100.236'), dec.dec(100.236, 3))
+        self.assertEqual(dec.dec_with_given_digits(
+            '100.236'), dec.dec(100.236, 3))
+        self.assertEqual(dec.dec_with_given_digits(
+            '100'), dec.dec(100, 0))
+
+    def test_dic2gr(self):
+        self.assertEqual(dec.dic2gr({'a': 100.23, 'b': '100.23'}),
+                         {'a': '100,23', 'b': '100,23'})
+
+    def test_dic_print(self):
+        va1 = 'αγορές                        :        10.25'
+        self.assertEqual(dec.dic_print({'αγορές': 10.25}), va1)

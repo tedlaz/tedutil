@@ -51,3 +51,6 @@ class TestTaxes(TestCase):
 
     def test_kostos_misthodosias(self):
         self.assertEqual(tx1.kostos_misthodosias(800, 20), 1201.8)
+
+    def test_mikta_apo_kathara(self):
+        print(tx1.mikta_apo_kathara(1000, 15, 0, '2019-01-01'))

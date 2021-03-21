@@ -1,6 +1,7 @@
 from decimal import Decimal
 from unittest import TestCase
-from tedutil.fixed_size_file import LinePrototype, TextFile, fld
+from tedutil.fixed_size_file import DataLine, LinePrototype, TextFile, fld
+from tedutil import fixed_size_file as fsf
 
 tx1 = """1ΛΑΖΑΡΟΣ                          00000000000000123454CSL01   15012020
 2000000011534900000009000000010026000000024058
@@ -88,3 +89,24 @@ class Test_Fixed_Size(TestCase):
         txt1 = csl.text()
         self.assertEqual(txt1, tx1)
         self.assertEqual(di1, csl.revert(txt1))
+
+    def test2(self):
+        ztf1 = fsf.ZeroesTextField(2)
+        self.assertRaises(ValueError, ztf1.text, 'ted')
+        ztf2 = fsf.Decimal2Field(5)
+        self.assertRaises(ValueError, ztf2.text, '1230.45')
+        ztf3 = fsf.TextSpacesField(5)
+        self.assertRaises(ValueError, ztf3.text, 'konstantinos')
+        ztf4 = fsf.SpacesTextField(5)
+        self.assertRaises(ValueError, ztf4.text, 'konstantinos')
+
+    def test3(self):
+        self.assertRaises(ValueError, fld, 'not_valid')
+        li1 = LinePrototype('1', 'Σύνολα')
+        li1.add_field('eponymo', fld('txt_', siz=30), 'Επώνυμο')
+        self.assertRaises(ValueError, li1.add_field, 'eponymo', fld('ymd'))
+        self.assertEqual(li1.number_of_fields, 1)
+        msg = "Σύνολα με κωδικό 1 και πεδία ['eponymo'] συνολικού μεγέθους 31 χαρακτήρων"
+        self.assertEqual(li1.__str__(), msg)
+        dli = fsf.DataLine(li1)
+        self.assertRaises(ValueError, dli.add_val, 'not_valid', 'teddy')

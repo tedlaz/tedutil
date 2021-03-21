@@ -162,7 +162,7 @@ def fld(fname, **pars):
     }
     if fname in flds:
         return flds[fname](**pars)
-    return ValueError(f'name {fname} is not valid')
+    raise ValueError(f'name {fname} is not valid')
 
 
 class LinePrototype:
@@ -275,7 +275,7 @@ class TextFile:
     def text2file(self, filename, encoding='WINDOWS-1253'):
         if os.path.exists(filename):
             raise FileExistsError(f'file {filename} already exists.')
-        with open(filename, 'w', encoding='WINDOWS-1253') as fil:
+        with open(filename, 'w', encoding=encoding) as fil:
             fil.write(self.text())
         return True
 

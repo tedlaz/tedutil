@@ -156,4 +156,4 @@ def dic_print(dic, format="%-30s: %12s"):
     :param format: Format string
     :return: Nothing
     """
-    print('\n'.join(format % (i, j) for i, j in dic.items()))
+    return('\n'.join(format % (i, j) for i, j in dic.items()))
