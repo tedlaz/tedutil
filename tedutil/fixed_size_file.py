@@ -238,6 +238,22 @@ class DataLine:
 
 
 class TextFile:
+    """[summary]
+    1. Create prototype lines:
+       li1 = LineProrotype('1', <Description1>)
+       li1.add_field(<field name>, fld(<field type>, ...))
+       li1.add_field...
+
+       li2 = LineProrotype('2', <Description2>)
+       li2.add_field(<field name>, fld(<field type>, ...))
+       li2.add_field ...
+
+    2. Create a TextFile object with prototype lines:
+       tf1 = TextFile({'li1': li1, 'li2': li2, ...})
+
+    3. Now you are ready to add actual lines like:
+       tf1.add_line('li1', {<field name 1>: val1, ...})
+    """
     def __init__(self, protolinesdic):
         """first protoline is header, last is footer"""
         self.protolines = protolinesdic

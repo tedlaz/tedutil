@@ -55,11 +55,13 @@ class Test_Fixed_Size(TestCase):
         li1.add_field('timi', fld('dec2', siz=20))
         li1.add_field('st1', fld('static', val='CSL01   '))
         li1.add_field('imnia', fld('dmy'))
+
         li2 = LinePrototype('2', 'Αναλυτικές γραμμές')
         li2.add_field('apod', fld('dec2', siz=12))
         li2.add_field('afm', fld('txt_', siz=9))
         li2.add_field('kre', fld('dec2', siz=12))
         li2.add_field('krt', fld('dec2', siz=12))
+
         li3 = LinePrototype('3', 'Όλοι οι τύποι')
         li3.add_field('sta', fld('static', val='CSL'))
         li3.add_field('fil', fld('fill', siz=3, val='#'))
@@ -71,8 +73,9 @@ class Test_Fixed_Size(TestCase):
         li3.add_field('ymd', fld('ymd'))
 
         eof = LinePrototype('EOF', 'Τέλος αρχείου')
-        # eof.add_field('eof', StaticField('EOF'))
+
         csl = TextFile({'li1': li1, 'li2': li2, 'li3': li3, 'eof': eof})
+
         csl.add_line('li1', {'eponymo': 'Λάζαρος',
                              'timi': 1234.54, 'imnia': '2020-01-15'})
         csl.add_line('li2', {'apod': 115.34, 'afm': '900000009',
