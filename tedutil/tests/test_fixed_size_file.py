@@ -5,6 +5,7 @@ from tedutil.fixed_size_file import LinePrototype, TextFile, fld
 tx1 = """1ΛΑΖΑΡΟΣ                          00000000000000123454CSL01   15012020
 2000000011534900000009000000010026000000024058
 1ΜΑΥΡΑΚΗΣ                         00000000000000012300CSL01   18012020
+3CSL###00022001234       TEDPOPI      1001202020200111
 EOF"""
 
 di1 = [
@@ -31,6 +32,17 @@ di1 = [
         'st1': 'CSL01   ',
         'imnia': '2020-01-18'
     },
+    {
+        'lineid': '3',
+        'sta': 'CSL',
+        'fil': '#',
+        '0tx': '22',
+        'de2': Decimal('12.34'),
+        'ftx': 'TED',
+        'btx': 'POPI',
+        'dmy': '2020-01-10',
+        'ymd': '2020-01-11'
+    },
     {'lineid': 'EOF'}
 ]
 
@@ -48,15 +60,27 @@ class Test_Fixed_Size(TestCase):
         li2.add_field('afm', fld('txt_', siz=9))
         li2.add_field('kre', fld('dec2', siz=12))
         li2.add_field('krt', fld('dec2', siz=12))
+        li3 = LinePrototype('3', 'Όλοι οι τύποι')
+        li3.add_field('sta', fld('static', val='CSL'))
+        li3.add_field('fil', fld('fill', siz=3, val='#'))
+        li3.add_field('0tx', fld('0txt', siz=5))
+        li3.add_field('de2', fld('dec2', siz=6))
+        li3.add_field('ftx', fld('_txt', siz=10))
+        li3.add_field('btx', fld('txt_', siz=10))
+        li3.add_field('dmy', fld('dmy'))
+        li3.add_field('ymd', fld('ymd'))
+
         eof = LinePrototype('EOF', 'Τέλος αρχείου')
         # eof.add_field('eof', StaticField('EOF'))
-        csl = TextFile({'li1': li1, 'li2': li2, 'eof': eof})
+        csl = TextFile({'li1': li1, 'li2': li2, 'li3': li3, 'eof': eof})
         csl.add_line('li1', {'eponymo': 'Λάζαρος',
                              'timi': 1234.54, 'imnia': '2020-01-15'})
         csl.add_line('li2', {'apod': 115.34, 'afm': '900000009',
                              'kre': 100.26, 'krt': 240.58})
         csl.add_line('li1', {'eponymo': 'Μαυράκης',
                      'timi': '123', 'imnia': '2020-01-18'})
+        csl.add_line('li3', {'0tx': 22, 'de2': '12.34', 'ftx': 'ted',
+                     'btx': 'popi', 'dmy': '2020-01-10', 'ymd': '2020-01-11'})
         csl.add_line('eof')
         txt1 = csl.text()
         self.assertEqual(txt1, tx1)

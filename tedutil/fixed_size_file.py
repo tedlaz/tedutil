@@ -153,6 +153,7 @@ def fld(fname, **pars):
     flds = {
         'static': StaticField,
         'fill': Filler,
+        '0txt': ZeroesTextField,
         'dec2': Decimal2Field,
         '_txt': SpacesTextField,
         'txt_': TextSpacesField,
