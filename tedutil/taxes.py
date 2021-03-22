@@ -25,18 +25,26 @@ KLI = {
     2017: ((20000, 10000, 10000), (22, 29, 37, 45)),
     2018: ((20000, 10000, 10000), (22, 29, 37, 45)),
     2019: ((20000, 10000, 10000), (22, 29, 37, 45)),
+    2020: ((10000, 10000, 10000, 10000), (9, 22, 28, 36, 44)),
+    2021: ((10000, 10000, 10000, 10000), (9, 22, 28, 36, 44)),
 }
 
 MEI = {
     2017: ((0, 1, 2, 3), (1900, 1950, 2000, 2100)),
     2018: ((0, 1, 2, 3), (1900, 1950, 2000, 2100)),
-    2019: ((0, 1, 2, 3), (1900, 1950, 2000, 2100))
+    2019: ((0, 1, 2, 3), (1900, 1950, 2000, 2100)),
+    2020: ((0, 1, 2, 3, 4, 5), (777, 810, 900, 1120, 1340, 1560)),
+    2021: ((0, 1, 2, 3, 4, 5), (777, 810, 900, 1120, 1340, 1560)),
 }
 
 EEA = {
     2018: ((12000, 8000, 10000, 10000, 25000, 155000),
            (0, 2.2, 5, 6.5, 7.5, 9, 10)),
     2019: ((12000, 8000, 10000, 10000, 25000, 155000),
+           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2020: ((12000, 8000, 10000, 10000, 25000, 155000),
+           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2021: ((12000, 8000, 10000, 10000, 25000, 155000),
            (0, 2.2, 5, 6.5, 7.5, 9, 10)),
 }
 
@@ -217,3 +225,50 @@ def kostos_misthodosias(misthos, pikaergodoti):
     ika_ergodoti = mikta * pikaergodoti / 100
     total = mikta + ika_ergodoti
     return total
+
+
+def foros2020(income, children=0):
+    income = dec(income)
+    kli, pos = (10000, 10000, 10000, 10000), (9, 22, 28, 36, 44)
+    foros_xoris_meiosi = klimaka(income, kli, pos)
+    # Μείωση φόρου
+    klimaka_meiosis = (777, 810, 900)
+    if children <= 2:
+        meiosi_total = klimaka_meiosis[children]
+    else:
+        meiosi_total = klimaka_meiosis[2] + 220 * (children - 2)
+    meiosi_meiosis = 0
+    if children < 5 and income > 12000:
+        meiosi_meiosis = (income - 12000) // 1000 * 20
+    if meiosi_meiosis > meiosi_total:
+        meiosi_meiosis = meiosi_total
+    meiosi = meiosi_total - meiosi_meiosis
+    if meiosi > foros_xoris_meiosi:
+        meiosi = foros_xoris_meiosi
+    # Φόρος χρήσης
+    foros = foros_xoris_meiosi - meiosi
+    # Ειδικό επίδομα αλληλεγγύης
+    eea_kli = (12000, 8000, 10000, 10000, 25000, 155000)
+    eea_pos = (0, 2.2, 5, 6.5, 7.5, 9, 10)
+    eea = klimaka(income, eea_kli, eea_pos)
+    return {
+        'income': income,
+        'children': children,
+        'foros-xoris-ekptosi': foros_xoris_meiosi,
+        'ekptosi-klimakas': meiosi_total,
+        'meiosi-ekptosis': meiosi_meiosis,
+        'ekptosi-teliki': meiosi,
+        'foros': foros,
+        'eea': eea,
+        'foros-eea': foros + eea,
+        'pososto': round((foros + eea) / income * dec(100), 2),
+        'pliroteo': income - foros - eea
+    }
+
+
+def foros(etos, income, children=0):
+    forosd = {2020: foros2020, 2021: foros2020}
+    ietos = int(etos)
+    if ietos in forosd:
+        return forosd[ietos](income, children)
+    raise ValueError(f'Δεν υπάρχει υπολογισμός για το έτος {etos}')

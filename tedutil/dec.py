@@ -40,10 +40,20 @@ def dec(value, decimals=2):
     :param decimals: Number of decimal digits
     :return: Python decimal number
     """
-    decimals = int(decimals)
+    # decimals = int(decimals)
     poso = 0 if (value is None) else value
-    tmp = Decimal(poso) if is_number(poso) else Decimal(0)
+    try:
+        tmp = Decimal(poso)
+    except:
+        tmp = Decimal(0)
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
+
+
+def dec2(value, decimals=2):
+    try:
+        return round(Decimal(value), decimals)
+    except:
+        return round(Decimal(0), decimals)
 
 
 def dec_with_given_digits(num):
