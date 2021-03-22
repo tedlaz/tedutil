@@ -57,4 +57,5 @@ class TestTaxes(TestCase):
         self.assertEqual(kathara, Decimal('1312.16'))
 
     def test_foros2020(self):
-        print(tx1.foros(2021, 10159.66, 1))
+        pliroteo = tx1.foros(2021, 10159.66, 1)['pliroteo']
+        self.assertEqual(pliroteo, Decimal('10034.53'))

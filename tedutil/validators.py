@@ -1,4 +1,5 @@
 """Greek VAT and Social Security Number validation functions"""
+from datetime import date
 
 
 def is_afm(afm):
@@ -33,3 +34,53 @@ def is_amka(amka):
             else:
                 total += digit
         return (total % 10) == 0
+
+
+def is_greek_date(strdate):
+    if not type(strdate) == str:
+        return False
+    if strdate.count('/') != 2:
+        return False
+    day, month, year = strdate.split('/')
+    try:
+        day, month, year = int(day), int(month), int(year)
+    except:
+        return False
+    try:
+        date(year, month, day)
+    except:
+        return False
+    return True
+
+
+def is_iso_date(strdate):
+    if not type(strdate) == str:
+        return False
+    if len(strdate) != 10:
+        return False
+    if strdate.count('-') != 2:
+        return False
+    year, month, day = strdate.split('-')
+    try:
+        day, month, year = int(day), int(month), int(year)
+    except:
+        return False
+    try:
+        date(year, month, day)
+    except:
+        return False
+    return True
+
+
+def is_number(value):
+    """Checks if value is number or not
+
+    :param value: value to be checked
+    :return: True/False
+    """
+    try:
+        float(value)
+    except ValueError:
+        return False
+    else:
+        return True

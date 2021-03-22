@@ -4,15 +4,6 @@ from tedutil import dec
 
 class TestDec(TestCase):
 
-    def test_is_num_string(self):
-        self.assertEqual(False, dec.is_number('123f'))
-
-    def test_is_num_float(self):
-        self.assertEqual(True, dec.is_number('13.24'))
-
-    def test_is_num_float2(self):
-        self.assertEqual(False, dec.is_number('13.243.2'))
-
     def test_zero_string_equals_zero(self):
         self.assertEqual(0, dec.dec(''))
 
@@ -58,7 +49,8 @@ class TestDec(TestCase):
 
     def test_int_always(self):
         self.assertEqual(dec.int_always(100.3), 100)
-        self.failureException(dec.int_always('35'))
+        self.assertEqual(dec.int_always('35a'), 0)
+        self.assertEqual(dec.int_always(None), 0)
 
     def test_dec_with_given_digits(self):
         self.assertEqual(dec.dec_with_given_digits(
@@ -73,3 +65,11 @@ class TestDec(TestCase):
     def test_dic_print(self):
         va1 = 'αγορές                        :        10.25'
         self.assertEqual(dec.dic_print({'αγορές': 10.25}), va1)
+
+    def test_eisfores(self):
+        cost = dec.eisfores(845, 14.12, 36.66)['cost']
+        self.assertEqual(cost, dec.dec(1035.47))
+        cost = dec.eisfores(845, .1412, .3666)['cost']
+        self.assertEqual(cost, dec.dec(1035.47))
+        total = dec.eisfores(845, 14.12, 40, 500)['total']
+        self.assertEqual(total, dec.dec(200))
