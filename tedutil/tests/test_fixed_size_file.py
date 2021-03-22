@@ -1,5 +1,6 @@
 from decimal import Decimal
 from unittest import TestCase
+import os
 from tedutil.fixed_size_file import DataLine, LinePrototype, TextFile, fld
 from tedutil import fixed_size_file as fsf
 
@@ -89,6 +90,15 @@ class Test_Fixed_Size(TestCase):
         txt1 = csl.text()
         self.assertEqual(txt1, tx1)
         self.assertEqual(di1, csl.revert(txt1))
+        file_path = 'tst334456'
+        try:
+            csl.text2file(file_path)
+            with open(file_path, encoding='WINDOWS-1253') as fil:
+                contents = fil.read()
+        finally:
+            os.remove(file_path)
+        self.assertEqual(contents, tx1)
+
 
     def test2(self):
         ztf1 = fsf.ZeroesTextField(2)
@@ -110,3 +120,8 @@ class Test_Fixed_Size(TestCase):
         self.assertEqual(li1.__str__(), msg)
         dli = fsf.DataLine(li1)
         self.assertRaises(ValueError, dli.add_val, 'not_valid', 'teddy')
+
+    def test4(self):
+        aaa = fsf.FixedSizeField(3)
+        self.assertRaises(Exception, aaa.text, 'test')
+        self.assertRaises(Exception, aaa.revert, 'test')

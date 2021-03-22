@@ -63,4 +63,8 @@ class TestTaxes(TestCase):
         self.assertEqual(pliroteo, Decimal('10034.53'))
         pliroteo = tx1.foros(2021, 13000, 3)['pliroteo']
         self.assertEqual(pliroteo, Decimal('12518'))
+        pliroteo = tx1.foros(2021, 130000, 3)['pliroteo']
+        self.assertEqual(pliroteo, Decimal('71849'))
+        pliroteo = tx1.foros(2021, 3000, 0)['pliroteo']
+        self.assertEqual(pliroteo, Decimal('3000'))
         self.assertRaises(ValueError, tx1.foros, 1980, 15000, 1)
