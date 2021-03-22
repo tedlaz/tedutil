@@ -92,6 +92,7 @@ class TestVarius(TestCase):
         self.assertFalse(val.is_iso_date('2021-02-29'))
         self.assertFalse(val.is_iso_date('202c-02-01'))
         self.assertFalse(val.is_iso_date('2020-02-1'))
+        self.assertFalse(val.is_iso_date('2020-02.01'))
         self.assertFalse(val.is_iso_date(14))
 
     def test_is_number(self):

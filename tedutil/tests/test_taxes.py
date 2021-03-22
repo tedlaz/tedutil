@@ -55,7 +55,12 @@ class TestTaxes(TestCase):
     def test_mikta_apo_kathara(self):
         kathara = tx1.mikta_apo_kathara(1000, 15, 0, '2019-01-01')
         self.assertEqual(kathara, Decimal('1312.16'))
+        kathara = tx1.mikta_apo_kathara(1000, 15, 0)
+        self.assertEqual(kathara, Decimal('1292.54'))
 
     def test_foros2020(self):
         pliroteo = tx1.foros(2021, 10159.66, 1)['pliroteo']
         self.assertEqual(pliroteo, Decimal('10034.53'))
+        pliroteo = tx1.foros(2021, 13000, 3)['pliroteo']
+        self.assertEqual(pliroteo, Decimal('12518'))
+        self.assertRaises(ValueError, tx1.foros, 1980, 15000, 1)

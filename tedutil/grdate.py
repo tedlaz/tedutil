@@ -124,7 +124,3 @@ def date_in_interval(date, date_from=None, date_to=None):
         if date_to < date:
             return False
     return True
-
-
-def date_out_of_interval(date, date_from=None, date_to=None):
-    return not date_in_interval(date, date_from, date_to)
