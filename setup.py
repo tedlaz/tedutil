@@ -8,29 +8,32 @@ if sys.hexversion < 0x3040000:
     exit(1)
 
 
-setup(name='tedutil',
-      version='0.10.5',
-      description='Various utility functions',
-      long_description='Various utility functions',
-      url='https://github.com/tedlaz/tedutil',
-      keywords=["util", "Greek"],
-      author='Ted Lazaros',
-      author_email='tedlaz@gmail.com',
-      # install_requires=['reportlab'],
-      license='GPLv3',
-      packages=['tedutil'],
-      classifiers=["Development Status :: 4 - Beta",
-                   "Environment :: Console",
-                   "Intended Audience :: Developers",
-                   "Natural Language :: English",
-                   "Operating System :: OS Independent",
-                   "Programming Language :: Python",
-                   "Programming Language :: Python :: 3",
-                   "Programming Language :: Python :: 3 :: Only",
-                   "Programming Language :: Python :: 3.5",
-                   "Programming Language :: Python :: 3.6",
-                   "Programming Language :: Python :: 3.7",
-                   "Programming Language :: Python :: 3.8",
-                   "Programming Language :: Python :: 3.9",
-                   "Topic :: Software Development :: Build Tools"]
-      )
+setup(
+    name='tedutil',
+    version='0.10.6',
+    description='Various utility functions',
+    long_description='Various utility functions',
+    url='https://github.com/tedlaz/tedutil',
+    keywords=["util", "Greek"],
+    author='Ted Lazaros',
+    author_email='tedlaz@gmail.com',
+    # install_requires=['reportlab'],
+    license='GPLv3',
+    packages=['tedutil'],
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Topic :: Software Development :: Build Tools"
+    ]
+)
