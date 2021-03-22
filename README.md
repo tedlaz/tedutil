@@ -3,8 +3,8 @@
 Utility functions
 
 [![PyPI version](https://badge.fury.io/py/tedutil.svg)](https://badge.fury.io/py/tedutil)
-[![Upload to PyPI](https://github.com/tedlaz/tedutil/actions/workflows/python-publish.yml/badge.svg)](https://github.com/tedlaz/tedutil/actions/workflows/python-publish.yml)
-[![Tests](https://github.com/tedlaz/tedutil/actions/workflows/python-testing.yml/badge.svg)](https://github.com/tedlaz/tedutil/actions/workflows/python-testing.yml)
+[![Upload to PyPI](https://github.com/tedlaz/tedutil/actions/workflows/publish2pypi.yml/badge.svg)](https://github.com/tedlaz/tedutil/actions/workflows/publish2pypi.yml)
+[![Tests](https://github.com/tedlaz/tedutil/actions/workflows/run-tests.yml/badge.svg)](https://github.com/tedlaz/tedutil/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/tedlaz/tedutil/branch/master/graph/badge.svg)](https://codecov.io/gh/tedlaz/tedutil)
 
 # Σχετικά
