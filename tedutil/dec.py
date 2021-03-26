@@ -5,7 +5,7 @@ from decimal import Decimal
 from decimal import ROUND_HALF_UP
 
 
-def int_always(value):
+def int_always(value) -> int:
     """Creates integer number in any case
 
     :param value: value to be converted
@@ -19,7 +19,7 @@ def int_always(value):
         return 0
 
 
-def dec(value, decimals=2):
+def dec(value, decimals=2) -> Decimal:
     """Creates a proper decimal
 
     :param value: number or string representing decimal
@@ -33,7 +33,7 @@ def dec(value, decimals=2):
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
 
 
-def dec_with_given_digits(num):
+def dec_with_given_digits(num) -> Decimal:
     """creates a decimal with decimal digits same as input number's digits
 
     :param num: number to transform
@@ -48,7 +48,7 @@ def dec_with_given_digits(num):
     return dec(num, decv)
 
 
-def dec2gr(poso, decimals=2, zero_as_empty_space=True):
+def dec2gr(poso, decimals=2, zero_as_empty_space=True) -> str:
     """Greek formated decimal to string
 
     :param poso: Python decimal number
@@ -64,7 +64,7 @@ def dec2gr(poso, decimals=2, zero_as_empty_space=True):
     return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def dic2gr(dic_of_decimals):
+def dic2gr(dic_of_decimals: dict) -> dict:
     """
 
     :param dic_of_decimals:
@@ -73,7 +73,7 @@ def dic2gr(dic_of_decimals):
     return {key: dec2gr(val) for key, val in dic_of_decimals.items()}
 
 
-def gr2dec(strval, decimals=2):
+def gr2dec(strval, decimals=2) -> Decimal:
     """Greek decimal string to python decimal number
 
     :param strval: Greek decimal string
@@ -83,7 +83,7 @@ def gr2dec(strval, decimals=2):
     return dec(strval.replace('.', '').replace(',', '.'), decimals)
 
 
-def split_val_to_list(val, alist, decimals=2):
+def split_val_to_list(val, alist: list, decimals: int = 2) -> list:
     """Splits val according to alist values
 
     :param val: Value to be splitted
@@ -120,7 +120,7 @@ def klimaka(value, scale, percent):
     return sum(pval)
 
 
-def distribute(value, alist, decimals=2):
+def distribute(value, alist: list, decimals: int = 2) -> list:
     """Distributes value according alist distribution
 
     :param value: Value to be distributed
@@ -136,17 +136,17 @@ def distribute(value, alist, decimals=2):
     return dist
 
 
-def eisfores(value, penos, ptotal, orio=None, decimals=2):
-    """[summary]
+def eisfores(value, penos, ptotal, orio=None, decimals: int = 2) -> dict:
+    """Υπολογισμός εισφορών ΕΦΚΑ
 
     Args:
-        value (numeric): Value
-        penos (numeric): Pososto kratisis ergazomenou
-        ptotal (numeric): Synoliko pososto kratisis
-        decimals (int, optional): Number of decimals. Defaults to 2.
+        value (numeric): Οι αποδοχές
+        penos (numeric): Ποσοστό εργαζομένου
+        ptotal (numeric): Συνολικό ποσοστό (Του εργοδότη υπολογίζεται αφαιρετικά)
+        decimals (int, optional): Αριθμός δεκαδικών
 
     Returns:
-        dictionary: Dictionary with calculated values
+        dictionary: Dictionary με τις υπολογισθείσες τιμές
     """
     value = dec(value, decimals)
     init_val = value
@@ -180,7 +180,7 @@ def eisfores(value, penos, ptotal, orio=None, decimals=2):
     }
 
 
-def dic_print(dic, format="%-30s: %12s"):
+def dic_print(dic, format="%-30s: %12s") -> str:
     """Print dictionary's keys : values
 
     :param dic: Dictionary to be printed

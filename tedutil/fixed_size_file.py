@@ -6,7 +6,7 @@ from tedutil.grtext import grup
 class FixedSizeField:
     """""Abstract class"""""
 
-    def __init__(self, siz):
+    def __init__(self, siz) -> None:
         self.length = siz
 
     def text(self, val):
@@ -19,14 +19,14 @@ class FixedSizeField:
 class StaticField(FixedSizeField):
     """Just a fixed value ABCD -> ABCD """
 
-    def __init__(self, val):
+    def __init__(self, val) -> None:
         self.val = grup(val)
         super().__init__(len(self.val))
 
-    def text(self, _):
+    def text(self, _) -> str:
         return self.val
 
-    def revert(self, txtval):
+    def revert(self, txtval) -> str:
         assert txtval == self.val
         return txtval
 
@@ -34,21 +34,21 @@ class StaticField(FixedSizeField):
 class Filler(FixedSizeField):
     """Fill with a specific char"""
 
-    def __init__(self, siz, val):
+    def __init__(self, siz, val) -> None:
         super().__init__(siz)
         self.val = str(val)
 
-    def text(self, _):
+    def text(self, _) -> str:
         return self.val * self.length
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         return txtval[0]
 
 
 class ZeroesTextField(FixedSizeField):
     """ 123 -> '0000123' """
 
-    def text(self, val):
+    def text(self, val) -> str:
         txt = str(val)
         txt_len = len(txt)
         if txt_len > self.length:
@@ -56,14 +56,14 @@ class ZeroesTextField(FixedSizeField):
         zeroes = '0' * (self.length - txt_len)
         return zeroes + txt
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         return txtval.strip().lstrip('0')
 
 
 class Decimal2Field(FixedSizeField):
     """Decimal with 2 decimal digits 123.45 -> '0000012345' """
 
-    def text(self, val):
+    def text(self, val) -> str:
         txt = str(round(dec(val), 2)).replace('.', '')
         txt_len = len(txt)
         if txt_len > self.length:
@@ -71,14 +71,14 @@ class Decimal2Field(FixedSizeField):
         zeroes = '0' * (self.length - txt_len)
         return zeroes + txt
 
-    def revert(self, txtval):
+    def revert(self, txtval) -> dec:
         return round(dec(txtval.strip().lstrip('0')) / dec(100), 2)
 
 
 class TextSpacesField(FixedSizeField):
     """ 'abc' -> 'abc    ' """
 
-    def text(self, val):
+    def text(self, val) -> str:
         txt = grup(val)
         txt_len = len(txt)
         if txt_len > self.length:
@@ -86,14 +86,14 @@ class TextSpacesField(FixedSizeField):
         spaces = ' ' * (self.length - txt_len)
         return txt + spaces
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         return txtval.strip()
 
 
 class SpacesTextField(FixedSizeField):
     """ 'abc' -> '    abc' """
 
-    def text(self, val):
+    def text(self, val) -> str:
         txt = grup(val)
         txt_len = len(txt)
         if txt_len > self.length:
@@ -101,7 +101,7 @@ class SpacesTextField(FixedSizeField):
         spaces = ' ' * (self.length - txt_len)
         return spaces + txt
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         return txtval.strip()
 
 
@@ -111,12 +111,12 @@ class Date2dmyField(FixedSizeField):
     def __init__(self):
         super().__init__(8)
 
-    def text(self, isodate):
+    def text(self, isodate: str) -> str:
         assert len(isodate) == 10
         year, month, day = isodate.split('-')
         return f'{day}{month}{year}'
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         day = txtval[:2]
         month = txtval[2:4]
         year = txtval[4:]
@@ -129,19 +129,19 @@ class Date2ymdField(FixedSizeField):
     def __init__(self):
         super().__init__(8)
 
-    def text(self, isodate):
+    def text(self, isodate: str) -> str:
         assert len(isodate) == 10
         year, month, date = isodate.split('-')
         return f'{year}{month}{date}'
 
-    def revert(self, txtval):
+    def revert(self, txtval: str) -> str:
         year = txtval[:4]
         month = txtval[4:6]
         day = txtval[6:]
         return f'{year}-{month}-{day}'
 
 
-def fld(fname, **pars):
+def fld(fname: str, **pars):
     """Factory to create fields
 
     Args:
@@ -168,14 +168,14 @@ def fld(fname, **pars):
 class LinePrototype:
     """This is how line is constructed"""
 
-    def __init__(self, line_code, line_per):
+    def __init__(self, line_code, line_per) -> None:
         self.code = str(line_code)
         self.per = line_per
         self.fields = []
         self.names = []
         self.labels = []
 
-    def add_field(self, name, field_object, label=None):
+    def add_field(self, name: str, field_object, label=None) -> None:
         if name in self.names:
             raise ValueError(f'name {name} already exists')
         self.names.append(name)
@@ -185,7 +185,7 @@ class LinePrototype:
         else:
             self.labels.append(label)
 
-    def revert(self, textval):
+    def revert(self, textval: str) -> dict:
         assert len(textval) == self.line_size
         fdi = {'lineid': self.code}
         clean_val = textval[len(self.code):]
@@ -197,17 +197,17 @@ class LinePrototype:
         return fdi
 
     @property
-    def number_of_fields(self):
+    def number_of_fields(self) -> int:
         return len(self.fields)
 
     @property
-    def line_size(self):
+    def line_size(self) -> int:
         tot = len(self.code)
         for field in self.fields:
             tot += field.length
         return tot
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f'{self.per} με κωδικό {self.code} και πεδία {self.names} '
             f'συνολικού μεγέθους {self.line_size} χαρακτήρων'
@@ -215,22 +215,22 @@ class LinePrototype:
 
 
 class DataLine:
-    def __init__(self, line_prototype, valdic=None):
+    def __init__(self, line_prototype, valdic=None) -> None:
         self.prototype = line_prototype
         self.values = {}
         if valdic:
             self.add_vals(valdic)
 
-    def add_val(self, name, value):
+    def add_val(self, name: str, value) -> None:
         if name not in self.prototype.names:
             raise ValueError(f'Invalid name {name}')
         self.values[name] = value
 
-    def add_vals(self, nvdic):
+    def add_vals(self, nvdic) -> None:
         for name, value in nvdic.items():
             self.add_val(name, value)
 
-    def text(self):
+    def text(self) -> str:
         txt = self.prototype.code
         for i, name in enumerate(self.prototype.names):
             txt += self.prototype.fields[i].text(self.values.get(name, ''))
@@ -254,22 +254,23 @@ class TextFile:
     3. Now you are ready to add actual lines like:
        tf1.add_line('li1', {<field name 1>: val1, ...})
     """
-    def __init__(self, protolinesdic):
+
+    def __init__(self, protolinesdic) -> None:
         """first protoline is header, last is footer"""
         self.protolines = protolinesdic
         self.lines = []
 
     @property
-    def line_signs(self):
+    def line_signs(self) -> dict:
         sig = {}
         for proto in self.protolines.values():
             sig[proto.code] = proto
         return sig
 
-    def add_line(self, protoline_key, linedic=None):
+    def add_line(self, protoline_key, linedic=None) -> None:
         self.lines.append(DataLine(self.protolines[protoline_key], linedic))
 
-    def text(self):
+    def text(self) -> str:
         return '\n'.join([l.text() for l in self.lines])
 
     def text2file(self, filename, encoding='WINDOWS-1253'):
@@ -279,7 +280,7 @@ class TextFile:
             fil.write(self.text())
         return True
 
-    def revert(self, txt_lines):
+    def revert(self, txt_lines) -> list:
         lines = txt_lines.split('\n')
         result = []
         for line in lines:

@@ -7,7 +7,7 @@ class TestGrup(TestCase):
         self.assertEqual('ΔΟΚΙΜΗ', grt.grup('δοκιμή'))
 
     def test_grup_2(self):
-        self.assertEqual('15', grt.grup(15))
+        self.assertEqual('15', grt.grup('15'))
 
     def test_grup_3(self):
         self.assertEqual(grt.grup('tst1όέίάήώύ'), 'TST1ΟΕΙΑΗΩΥ')

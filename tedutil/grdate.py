@@ -13,7 +13,7 @@ DAYPGR = ["Δευτέρας", "Τρίτης", "Τετάρτης", "Πέμπτη�
           "Σαββάτου", "Κυριακής"]
 
 
-def iso2gr(date):
+def iso2gr(date: str) -> str:
     """Transform iso date string to greek formatted date string
 
     :param date: Iso formatted date string (yyyy-mm-dd)
@@ -27,7 +27,7 @@ def iso2gr(date):
         return '01/01/1000'
 
 
-def gr2iso(grdate):
+def gr2iso(grdate: str) -> str:
     """Transform Greek date string to iso date string
 
     :param grdate: Greek Date string
@@ -45,7 +45,7 @@ def gr2iso(grdate):
     return '%s-%s-%s' % (year, month, day)
 
 
-def date2period_end(isodate):
+def date2period_end(isodate: str) -> str:
     """Transform iso date to last trimino date
 
     :param isodate:
@@ -65,7 +65,7 @@ def date2period_end(isodate):
         return '%s-%s-%s' % (year, '12', '31')
 
 
-def date2per(isodate, rate=2):
+def date2per(isodate: str, rate=2) -> str:
     """Returns Year-Period Type-Period Number
 
     :param isodate:
@@ -84,21 +84,21 @@ def date2per(isodate, rate=2):
     return stt % (year, rate, per)
 
 
-def season(isodate, startmonth=10):
+def season(isodate: str, startmonth=10) -> str:
     """Iso date to Season (YearFrom-YearTo)
 
     :param isodate:
     :param startmonth:
     :return: (YYYY-YYYY)
     """
-    year, month, day = isodate.split('-')
+    year, month, _ = isodate.split('-')
     if int(month) >= startmonth:
         return '%s-%s' % (year, int(year) + 1)
     else:
         return '%s-%s' % (int(year) - 1, year)
 
 
-def today(format_string="%Y%m%d"):
+def today(format_string: str = "%Y%m%d") -> str:
     """Today's date in different formats
 
     :param format_string: "%Y%m%d","%Y-%m-%d","%d/%m/%Y" ,"%Y-%m-%d %H:%M:%S"
@@ -107,7 +107,7 @@ def today(format_string="%Y%m%d"):
     return datetime.datetime.now().strftime(format_string)
 
 
-def current_period(format_string="%Y%m"):
+def current_period(format_string: str = "%Y%m") -> str:
     """Today's date in different formats
 
     :param format_string: "%Y%m%d","%Y-%m-%d","%d/%m/%Y" ,"%Y-%m-%d %H:%M:%S"
@@ -116,7 +116,7 @@ def current_period(format_string="%Y%m"):
     return datetime.datetime.now().strftime(format_string)
 
 
-def date_in_interval(date, date_from=None, date_to=None):
+def date_in_interval(date, date_from=None, date_to=None) -> bool:
     if date_from:
         if date_from > date:
             return False

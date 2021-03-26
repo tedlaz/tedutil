@@ -1,4 +1,5 @@
 """Various functions for tax purposes"""
+from decimal import Decimal
 from tedutil.dec import dec
 from tedutil.dec import klimaka
 from tedutil.grdate import today
@@ -63,7 +64,7 @@ def foros_etoys(year, yearly_income):
     return klimaka(yearly_income, scale, percent)
 
 
-def meiosi_foroy(year, yearly_income, children):
+def meiosi_foroy(year, yearly_income, children) -> Decimal:
     """Annual tax reduction
 
     :param year: year
@@ -88,7 +89,7 @@ def meiosi_foroy(year, yearly_income, children):
     return dec(0)
 
 
-def foros_etoys_me_ekptosi(year, yearly_income, children=0):
+def foros_etoys_me_ekptosi(year, yearly_income, children=0) -> Decimal:
     """Calculates annual tax with reduction
 
     :param year: year
@@ -102,7 +103,7 @@ def foros_etoys_me_ekptosi(year, yearly_income, children=0):
     return final if final > 0 else dec(0)
 
 
-def foros_periodoy(year, apodoxes, children=0, barytis=14, extra=0):
+def foros_periodoy(year, apodoxes, children=0, barytis=14, extra=0) -> Decimal:
     """Calculates tax for period
 
     :param year: year

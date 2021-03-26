@@ -2,7 +2,7 @@
 from datetime import date
 
 
-def is_afm(afm):
+def is_afm(afm) -> bool:
     """Algorithmic check for greek vat numbers (afm
 
     :param afm: Greek Vat Number (9 digits)
@@ -16,7 +16,7 @@ def is_afm(afm):
     return check == int(afm[8])
 
 
-def is_amka(amka):
+def is_amka(amka) -> bool:
     """Algorithmic check of Greek Social Security Number (AMKA
 
     :param amka: Greek Social security number (11 digits)
@@ -36,7 +36,7 @@ def is_amka(amka):
         return (total % 10) == 0
 
 
-def is_greek_date(strdate):
+def is_greek_date(strdate) -> bool:
     if not type(strdate) == str:
         return False
     if strdate.count('/') != 2:
@@ -53,7 +53,7 @@ def is_greek_date(strdate):
     return True
 
 
-def is_iso_date(strdate):
+def is_iso_date(strdate) -> bool:
     if not type(strdate) == str:
         return False
     if len(strdate) != 10:
@@ -72,7 +72,7 @@ def is_iso_date(strdate):
     return True
 
 
-def is_number(value):
+def is_number(value) -> bool:
     """Checks if value is number or not
 
     :param value: value to be checked

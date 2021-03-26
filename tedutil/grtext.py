@@ -1,7 +1,7 @@
 """Greek text manipulation functions"""
 
 
-def grup(txtval):
+def grup(txtval: str) -> str:
     """Trasforms a string to uppercase special for Greek comparison
 
     :param txtval:
@@ -16,7 +16,7 @@ def grup(txtval):
     return ''.join(ftxt)
 
 
-def split_strip(text_line, separator='|'):
+def split_strip(text_line: str, separator='|') -> list:
     """Split and strip a txt
 
     :param text_line:
