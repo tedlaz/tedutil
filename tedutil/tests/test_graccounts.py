@@ -1,5 +1,9 @@
+import os
+import json
 from unittest import TestCase
 from tedutil import graccounts as gra
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 class TestGraccounts(TestCase):
@@ -43,13 +47,39 @@ class TestGraccounts(TestCase):
         tr3.add_final_line('50.00.00.001')
         tr4 = gra.Transaction('2021-02-17', 'L3', 'test4')
         tr4.add_lines([('20.00.00', 100), ('38.03.00',)])
-        print(tr1.account_set, tr2.account_set)
-        print(tr2)
+        # print(tr1.account_set, tr2.account_set)
+        # print(tr2)
         book = gra.Book(2021)
         book.add_transaction_object(tr1)
         book.add_transaction_object(tr2)
         book.add_transaction_object(tr3)
         book.add_transaction_object(tr4)
         for trn in book.trans_ee():
-            print(trn.typos_set)
-            print(trn.is_ee, trn.is_fpa)
+            # print(trn.typos_set)
+            # print(trn.is_ee, trn.is_fpa)
+            pass
+        # print(tr4, tr4.reverse('2021-02-17', 'pis34'))
+        # print(tr4.as_dic)
+        adi = {
+            'dat': '2020-12-15',
+            'par': 'ΑΛΠ21',
+            'per': 'Δοκιμή',
+            'z': [
+                {'acc': '38.00', 'val': -1000},
+                {'acc': '50.00', 'val': 1000}
+            ]
+        }
+        ttt = gra.Transaction.from_dic(adi)
+        # print(ttt)
+
+    def test_json(self):
+        fil = os.path.join(dir_path, 'graccount_data.json')
+        with open(fil) as json_file:
+            data = json.load(json_file)
+        bok = gra.Book(2020)
+        bok.add_trans_from_list_dic(data)
+        # print(bok)
+        # print(bok.as_list_of_dicts)
+        print('\n')
+        for trn in bok.transactions:
+            print(trn.ee_type, trn.re)
