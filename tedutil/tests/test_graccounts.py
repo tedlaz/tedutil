@@ -49,7 +49,8 @@ class TestGraccounts(TestCase):
         tr4.add_lines([('20.00.00', 100), ('38.03.00',)])
         # print(tr1.account_set, tr2.account_set)
         # print(tr2)
-        book = gra.Book(2021)
+        acc = os.path.join(dir_path, 'acc.txt')
+        book = gra.Book(acc)
         book.add_transaction_object(tr1)
         book.add_transaction_object(tr2)
         book.add_transaction_object(tr3)
@@ -74,12 +75,14 @@ class TestGraccounts(TestCase):
 
     def test_json(self):
         fil = os.path.join(dir_path, 'graccount_data.json')
+        acc = os.path.join(dir_path, 'acc.txt')
         with open(fil) as json_file:
             data = json.load(json_file)
-        bok = gra.Book(2020)
+        bok = gra.Book(acc)
         bok.add_trans_from_list_dic(data)
         # print(bok)
         # print(bok.as_list_of_dicts)
-        print('\n')
-        for trn in bok.transactions:
-            print(trn.ee_type, trn.re)
+        # print('\n')
+        # for trn in bok.transactions:
+        #     print(trn.ee_type, trn.re)
+        bok.check_account_validity()

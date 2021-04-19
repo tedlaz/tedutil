@@ -1,6 +1,7 @@
 """Ελληνικοί λογαριασμοί Λογιστικής"""
 from collections import namedtuple
 from tedutil.dec import dec
+from tedutil import acc_parse as acp
 
 
 TAJEOS = '0'
@@ -441,12 +442,17 @@ class Transaction:
 
 
 class Book:
-    def __init__(self, xrisi: str):
-        self.xrisi = str(xrisi)
+    def __init__(self, acc_pars):
+        self.chart, self.chart0, self.ee = acp.acc_parse(acc_pars)
+        self.xrisi = None
         self.transactions = []
         self.account_set = set()
         self.min_date = ''
         self.max_date = ''
+
+    def check_account_validity(self):
+        for acc in self.account_set:
+            acp.match_account(acc, self.chart)
 
     def trans_filter_by_date(self, apo=None, eos=None):
         for tran in self.transactions:
@@ -490,8 +496,8 @@ class Book:
         if type(tran_object) != Transaction:
             raise ValueError(f'{tran_object} is not a Transaction')
 
-        if not tran_object.date.startswith(self.xrisi):
-            raise ValueError(f'{tran_object} date is not in {self.xrisi}')
+        # if not tran_object.date.startswith(self.xrisi):
+        #     raise ValueError(f'{tran_object} date is not in {self.xrisi}')
 
         if not tran_object.is_ok:
             raise ValueError(f'{tran_object} is not balanced')
@@ -508,6 +514,9 @@ class Book:
             self.max_date = tran_object.date
         if tran_object.date < self.min_date:
             self.min_date = tran_object.date
+        # Η χρήση είναι το έτος της μικρότερης ημερομηνίας
+        self.xrisi = self.min_date[:4]
+        assert self.min_date[:4] == self.max_date[:4]
 
     def add_transaction_dict(self, trn: dict) -> None:
         pass
