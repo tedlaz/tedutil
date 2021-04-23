@@ -86,3 +86,4 @@ class TestGraccounts(TestCase):
         # for trn in bok.transactions:
         #     print(trn.ee_type, trn.re)
         bok.check_account_validity()
+        print(bok)
