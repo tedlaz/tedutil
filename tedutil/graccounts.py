@@ -1,35 +1,41 @@
 """Ελληνικοί λογαριασμοί Λογιστικής"""
+from dataclasses import dataclass
 from collections import namedtuple
 from tedutil.dec import dec
 from tedutil import acc_parse as acp
+from enum import Enum
+
+DeCr = Enum('DeCr', "DEBIT CREDIT")
+
+class Act(Enum):
+    TAJEOS = '0'
+    PAGIA = '1'
+    APOTHEMATA = '2'
+    APAITHSEIS = '3'
+    KEFALAIO = '4'
+    YPOXREOSEIS = '5'
+    EJODA = '6'
+    ESODA = '7'
+    APOTELESMATA = '8'
+    ANALYTIKH = '9'
+    FPA = '54.00'
 
 
-TAJEOS = '0'
-PAGIA = '1'
-APOTHEMATA = '2'
-APAITHSEIS = '3'
-KEFALAIO = '4'
-YPOXREOSEIS = '5'
-EJODA = '6'
-ESODA = '7'
-APOTELESMATA = '8'
-ANALYTIKH = '9'
-FPA = '54.00'
-EE_SET = {PAGIA, APOTHEMATA, EJODA, ESODA}
-EE_ESODA = (PAGIA, APOTHEMATA, EJODA)
-EE_EJODA = (ESODA,)
-EE_FPA = (FPA, PAGIA, APOTHEMATA, EJODA, ESODA)
+EE_SET = {Act.PAGIA, Act.APOTHEMATA, Act.EJODA, Act.ESODA}
+EE_EJODA = (Act.PAGIA, Act.APOTHEMATA, Act.EJODA)
+EE_ESODA = (Act.ESODA,)
+EE_FPA = (Act.FPA, Act.PAGIA, Act.APOTHEMATA, Act.EJODA, Act.ESODA)
 ACC_NORMAL_STATUS = {
-    TAJEOS: 0,
-    PAGIA: 1,
-    APOTHEMATA: 1,
-    APAITHSEIS: 1,
-    KEFALAIO: -1,
-    YPOXREOSEIS: -1,
-    EJODA: 1,
-    ESODA: -1,
-    APOTELESMATA: 0,
-    ANALYTIKH: 0
+    Act.TAJEOS: 0,
+    Act.PAGIA: 1,
+    Act.APOTHEMATA: 1,
+    Act.APAITHSEIS: 1,
+    Act.KEFALAIO: -1,
+    Act.YPOXREOSEIS: -1,
+    Act.EJODA: 1,
+    Act.ESODA: -1,
+    Act.APOTELESMATA: 0,
+    Act.ANALYTIKH: 0
 }
 
 REVAL = {
@@ -54,6 +60,13 @@ PAGIA+APOTHEMATA+APAITHSEIS+KEFALAIO+YPOXREOSEIS+EJODA+ESODA+APOTELESMATA=0
 APOTHEMATA+EJODA+ESODA πλέον τη διαφορά της απογραφής
 """
 
+
+def taxonomize_tran_line(trline):
+    if trline.value < 0:
+        dcr = DeCr.CREDIT
+    else:
+        dcr = DeCr.DEBIT
+
 class Account:
     def __init__(self, code, per=None):
         self.code = code
@@ -71,29 +84,10 @@ class Account:
         return f"Account(code={self.code}, per={self.per})"
 
 
+@dataclass(frozen=True)
 class TransactionLine:
-    def __init__(self, account, value):
-        self.account = account
-        if value == 0:
-            raise ValueError("Δεν μπορεί να είναι μηδενικό το value")
-        self.value = dec(value)
-
-    # @property
-    # def re(self):
-    #     val = ''
-
-    #     if self.account.startswith(FPA):
-    #         if self.account.startswith('54.00.9'):
-    #             val = 'z'
-    #         else:
-    #             val = 'v'
-    #     else:
-    #         val = REVAL.get(self.account[0], 'u')
-
-    #     if self.value < 0:
-    #         val = val.upper()
-
-    #     return val
+    account: str
+    value: float
 
     @property
     def re(self):
@@ -121,6 +115,13 @@ class TransactionLine:
             val = val.upper()
 
         return val
+
+    @property
+    def debit_credit(self):
+        if self.value < 0:
+            return 'CREDIT'
+        return 'DEBIT'
+
     @property
     def value_float(self):
         return round(float(self.value), 2)
@@ -155,7 +156,7 @@ class TransactionLine:
 
     @property
     def omada(self):
-        if self.account.startswith(FPA):
+        if self.account.startswith(Act.FPA.value):
             return 'fpa'
         elif self.account[0] in '0123456789':
             return self.account[0]
@@ -177,9 +178,6 @@ class TransactionLine:
     @property
     def credit_negative(self):
         return dec(0) if self.value < 0 else -self.value
-
-    def __repr__(self):
-        return f"TransactionLine(account='{self.account}', value={self.value})"
 
 
 class Transaction:

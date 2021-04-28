@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "tedutil"
+version = "0.11.0"
+description = "Varius utility functions"
+authors = ["tedlaz <tedlaz@gmail.com>"]
+license = "GPL"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+autopep8 = "^1.5.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
