@@ -1,6 +1,6 @@
 # tedutil
 
-Utility functions
+ Utility functions
 
 [![PyPI version](https://badge.fury.io/py/tedutil.svg)](https://badge.fury.io/py/tedutil)
 [![Upload to PyPI](https://github.com/tedlaz/tedutil/actions/workflows/publish2pypi.yml/badge.svg)](https://github.com/tedlaz/tedutil/actions/workflows/publish2pypi.yml)
