@@ -22,8 +22,8 @@ class Act(Enum):
 
 
 EE_SET = {Act.PAGIA, Act.APOTHEMATA, Act.EJODA, Act.ESODA}
-EE_EJODA = (Act.PAGIA, Act.APOTHEMATA, Act.EJODA)
-EE_ESODA = (Act.ESODA,)
+EE_EJODA = (Act.PAGIA.value, Act.APOTHEMATA.value, Act.EJODA.value)
+EE_ESODA = (Act.ESODA.value,)
 EE_FPA = (Act.FPA, Act.PAGIA, Act.APOTHEMATA, Act.EJODA, Act.ESODA)
 ACC_NORMAL_STATUS = {
     Act.TAJEOS: 0,
@@ -145,7 +145,7 @@ class TransactionLine:
 
     @property
     def typos(self):
-        if self.account.startswith(FPA):
+        if self.account.startswith(Act.FPA.value):
             return 'fpa'
         elif self.account.startswith(EE_ESODA):
             return 'esoda'
