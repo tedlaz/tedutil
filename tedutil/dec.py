@@ -28,7 +28,7 @@ def dec(value, decimals=2) -> Decimal:
     """
     try:
         tmp = Decimal(value)
-    except:
+    except Exception:
         tmp = Decimal(0)
     return tmp.quantize(Decimal(10) ** (-1 * decimals), rounding=ROUND_HALF_UP)
 
@@ -61,7 +61,8 @@ def dec2gr(poso, decimals=2, zero_as_empty_space=True) -> str:
     if tpo == 0:
         if zero_as_empty_space:
             return ''
-    return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
+    return fst.format(tpo).replace(",", "X")\
+        .replace(".", ",").replace("X", ".")
 
 
 def dic2gr(dic_of_decimals: dict) -> dict:
@@ -142,7 +143,8 @@ def eisfores(value, penos, ptotal, orio=None, decimals: int = 2) -> dict:
     Args:
         value (numeric): Οι αποδοχές
         penos (numeric): Ποσοστό εργαζομένου
-        ptotal (numeric): Συνολικό ποσοστό (Του εργοδότη υπολογίζεται αφαιρετικά)
+        ptotal (numeric): Συνολικό ποσοστό
+                         (Του εργοδότη υπολογίζεται αφαιρετικά)
         decimals (int, optional): Αριθμός δεκαδικών
 
     Returns:

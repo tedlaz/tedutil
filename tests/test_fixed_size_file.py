@@ -1,7 +1,7 @@
 from decimal import Decimal
 from unittest import TestCase
 import os
-from tedutil.fixed_size_file import DataLine, LinePrototype, TextFile, fld
+from tedutil.fixed_size_file import LinePrototype, TextFile, fld
 from tedutil import fixed_size_file as fsf
 
 tx1 = """1ΛΑΖΑΡΟΣ                          00000000000000123454CSL01   15012020
@@ -99,7 +99,6 @@ class Test_Fixed_Size(TestCase):
             os.remove(file_path)
         self.assertEqual(contents, tx1)
 
-
     def test2(self):
         ztf1 = fsf.ZeroesTextField(2)
         self.assertRaises(ValueError, ztf1.text, 'ted')
@@ -116,7 +115,10 @@ class Test_Fixed_Size(TestCase):
         li1.add_field('eponymo', fld('txt_', siz=30), 'Επώνυμο')
         self.assertRaises(ValueError, li1.add_field, 'eponymo', fld('ymd'))
         self.assertEqual(li1.number_of_fields, 1)
-        msg = "Σύνολα με κωδικό 1 και πεδία ['eponymo'] συνολικού μεγέθους 31 χαρακτήρων"
+        msg = (
+            "Σύνολα με κωδικό 1 και πεδία ['eponymo']"
+            " συνολικού μεγέθους 31 χαρακτήρων"
+        )
         self.assertEqual(li1.__str__(), msg)
         dli = fsf.DataLine(li1)
         self.assertRaises(ValueError, dli.add_val, 'not_valid', 'teddy')

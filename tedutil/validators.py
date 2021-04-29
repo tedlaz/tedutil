@@ -44,11 +44,11 @@ def is_greek_date(strdate) -> bool:
     day, month, year = strdate.split('/')
     try:
         day, month, year = int(day), int(month), int(year)
-    except:
+    except Exception:
         return False
     try:
         date(year, month, day)
-    except:
+    except Exception:
         return False
     return True
 
@@ -63,11 +63,11 @@ def is_iso_date(strdate) -> bool:
     year, month, day = strdate.split('-')
     try:
         day, month, year = int(day), int(month), int(year)
-    except:
+    except Exception:
         return False
     try:
         date(year, month, day)
-    except:
+    except Exception:
         return False
     return True
 

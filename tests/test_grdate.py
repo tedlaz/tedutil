@@ -27,7 +27,6 @@ class TestIso2gr(TestCase):
         self.assertEqual('2018-12-31', grd.date2period_end('2018-10-01'))
         self.assertEqual('2018-12-31', grd.date2period_end('2018-13-01'))
 
-
     def test_date2per1(self):
         self.assertEqual('201711', grd.date2per('2017-01-15', 1))  # Μήνας
         self.assertEqual('201721', grd.date2per('2017-01-15', 2))  # Δίμηνο
@@ -44,9 +43,12 @@ class TestIso2gr(TestCase):
         self.assertEqual('2016-2017', grd.season('2017-01-30', 2))
 
     def test_date_in_interval(self):
-        self.assertTrue(grd.date_in_interval('2020-01-12', '2020-01-10', '2020-01-12'))
-        self.assertFalse(grd.date_in_interval('2020-01-12', '2021-01-10', '2021-01-12'))
-        self.assertFalse(grd.date_in_interval('2020-01-12', '2019-01-10', '2019-01-12'))
+        self.assertTrue(grd.date_in_interval(
+            '2020-01-12', '2020-01-10', '2020-01-12'))
+        self.assertFalse(grd.date_in_interval(
+            '2020-01-12', '2021-01-10', '2021-01-12'))
+        self.assertFalse(grd.date_in_interval(
+            '2020-01-12', '2019-01-10', '2019-01-12'))
 
     def test_current_period(self):
         self.assertTrue(grd.current_period() > '200000')

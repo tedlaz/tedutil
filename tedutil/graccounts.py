@@ -7,6 +7,7 @@ from enum import Enum
 
 DeCr = Enum('DeCr', "DEBIT CREDIT")
 
+
 class Act(Enum):
     TAJEOS = '0'
     PAGIA = '1'
@@ -63,9 +64,9 @@ APOTHEMATA+EJODA+ESODA πλέον τη διαφορά της απογραφής
 
 def taxonomize_tran_line(trline):
     if trline.value < 0:
-        dcr = DeCr.CREDIT
-    else:
-        dcr = DeCr.DEBIT
+        return DeCr.CREDIT
+    return DeCr.DEBIT
+
 
 class Account:
     def __init__(self, code, per=None):
@@ -192,6 +193,7 @@ class Transaction:
           1. Αγορές-Έξοδα ('1', '2', '6', '54.00')
           2. Πωλήσεις ('7', '54.00')
     """
+
     def __init__(self, date, parastatiko, perigrafi, afm=''):
         self.date = date
         self.parastatiko = parastatiko
@@ -257,7 +259,7 @@ class Transaction:
         credit = 'credit'
         error = 'error'
         flg = {
-            'Dz': EeType(1, normal,'Πωλήσεις χωρίς ΦΠΑ'),
+            'Dz': EeType(1, normal, 'Πωλήσεις χωρίς ΦΠΑ'),
             'dZ': EeType(1, credit, 'Πιστωτικό πωλήσεων χωρίς ΦΠΑ'),
             'DVz': EeType(1, normal, 'Πωλήσεις με ΦΠΑ'),
             'dvZ': EeType(1, credit, 'Πιστωτικό πωλήσεων με ΦΠΑ'),
@@ -284,10 +286,10 @@ class Transaction:
         if not self.is_ok:
             return False
         # Δεν γίνεται να υπάρχουν έσοδα και έξοδα μαζί σε μία εγγραφή
-        if {ESODA, EJODA}.issubset(self.typos_set):
+        if {Act.ESODA.value, Act.EJODA.value}.issubset(self.typos_set):
             return False
         # Δεν γίνεται να υπάρχουν έσοδα και αποθέματα μαζί
-        if {ESODA, APOTHEMATA}.issubset(self.typos_set):
+        if {Act.ESODA.value, Act.APOTHEMATA.value}.issubset(self.typos_set):
             return False
         # Θα πρέπει σε ένα άρθρο όλοι οι λογαριασμοί των (1, 2, 54.00, 7)
         # να έχουν το ίδιο πρόσημο
@@ -299,11 +301,11 @@ class Transaction:
     def ee_typos(self):
         if not self.is_proper_ee:
             return None
-        if APOTHEMATA in self.typos_set:
+        if Act.APOTHEMATA.value in self.typos_set:
             return 'ejoda'
-        elif EJODA in self.typos_set:
+        elif Act.EJODA.value in self.typos_set:
             return 'ejoda'
-        elif ESODA in self.typos_set:
+        elif Act.ESODA.value in self.typos_set:
             return 'esoda'
         else:
             return 'error'
@@ -376,7 +378,7 @@ class Transaction:
             'par': self.parastatiko,
             'per': self.perigrafi,
             'afm': self.afm,
-            'z': [l.as_dic for l in self.lines]
+            'z': [lin.as_dic for lin in self.lines]
         }
         return adi
 

@@ -10,10 +10,10 @@ class FixedSizeField:
         self.length = siz
 
     def text(self, val):
-        raise NotImplemented
+        raise NotImplementedError
 
     def revert(self, textVal):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class StaticField(FixedSizeField):
@@ -145,7 +145,8 @@ def fld(fname: str, **pars):
     """Factory to create fields
 
     Args:
-        fname (str): static(val), fill(siz, val), dec2(siz), _txt(siz), txt_(siz), dmy(), ymd()
+        fname (str): static(val), fill(siz, val),
+        dec2(siz), _txt(siz), txt_(siz), dmy(), ymd()
         **pars: possible values are len, val
     Returns:
         FixedSizeField:
@@ -271,7 +272,7 @@ class TextFile:
         self.lines.append(DataLine(self.protolines[protoline_key], linedic))
 
     def text(self) -> str:
-        return '\n'.join([l.text() for l in self.lines])
+        return '\n'.join([lin.text() for lin in self.lines])
 
     def text2file(self, filename, encoding='WINDOWS-1253'):
         if os.path.exists(filename):

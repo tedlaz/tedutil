@@ -33,7 +33,7 @@ def test_flyweight_acc():
     acs = []
     for _ in range(1000):
         acs.append(grb.Account('38.01'))
-    ac3 = grb.Account('38.01', 'Ταμείο Κεντρικό')
+    # ac3 = grb.Account('38.01', 'Ταμείο Κεντρικό')
     for _ in range(1000):
         acs.append(grb.Account('38.01'))
     print(dict(ac1._pool))

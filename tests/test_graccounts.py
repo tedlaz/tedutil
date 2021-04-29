@@ -61,16 +61,16 @@ class TestGraccounts(TestCase):
             pass
         # print(tr4, tr4.reverse('2021-02-17', 'pis34'))
         # print(tr4.as_dic)
-        adi = {
-            'dat': '2020-12-15',
-            'par': 'ΑΛΠ21',
-            'per': 'Δοκιμή',
-            'z': [
-                {'acc': '38.00', 'val': -1000},
-                {'acc': '50.00', 'val': 1000}
-            ]
-        }
-        ttt = gra.Transaction.from_dic(adi)
+        # adi = {
+        #     'dat': '2020-12-15',
+        #     'par': 'ΑΛΠ21',
+        #     'per': 'Δοκιμή',
+        #     'z': [
+        #         {'acc': '38.00', 'val': -1000},
+        #         {'acc': '50.00', 'val': 1000}
+        #     ]
+        # }
+        # ttt = gra.Transaction.from_dic(adi)
         # print(ttt)
 
     def test_json(self):

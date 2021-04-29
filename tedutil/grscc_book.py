@@ -11,6 +11,7 @@ class EeLine:
     def __init__(self):
         pass
 
+
 class Account:
     """Flyweight implementation of account"""
     _pool = weakref.WeakValueDictionary()

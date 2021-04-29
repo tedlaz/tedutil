@@ -84,7 +84,6 @@ class TestVarius(TestCase):
         self.assertFalse(val.is_greek_date('01/13/1963'))
         self.assertFalse(val.is_greek_date(3))
 
-
     def test_is_iso_date(self):
         self.assertTrue(val.is_iso_date('2020-01-01'))
         self.assertTrue(val.is_iso_date('2020-02-28'))
