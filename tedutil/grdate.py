@@ -117,10 +117,8 @@ def current_period(format_string: str = "%Y%m") -> str:
 
 
 def date_in_interval(date, date_from=None, date_to=None) -> bool:
-    if date_from:
-        if date_from > date:
-            return False
-    if date_to:
-        if date_to < date:
-            return False
+    if date_from and date_from > date:
+        return False
+    if date_to and date_to < date:
+        return False
     return True
