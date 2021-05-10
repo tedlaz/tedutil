@@ -1,16 +1,44 @@
 """Greek date functions"""
 import datetime
 
-MONTHGR = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάϊος",
-           "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος",
-           "Νοέμβριος", "Δεκέμβριος"]
-MONTHPGR = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου",
-            "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου",
-            "Νοεμβρίου", "Δεκεμβρίου"]
-DAYGR = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο",
-         "Κυριακή"]
-DAYPGR = ["Δευτέρας", "Τρίτης", "Τετάρτης", "Πέμπτης", "Παρασκευής",
-          "Σαββάτου", "Κυριακής"]
+MONTHGR = [
+    "Ιανουάριος",
+    "Φεβρουάριος",
+    "Μάρτιος",
+    "Απρίλιος",
+    "Μάϊος",
+    "Ιούνιος",
+    "Ιούλιος",
+    "Αύγουστος",
+    "Σεπτέμβριος",
+    "Οκτώβριος",
+    "Νοέμβριος",
+    "Δεκέμβριος",
+]
+MONTHPGR = [
+    "Ιανουαρίου",
+    "Φεβρουαρίου",
+    "Μαρτίου",
+    "Απριλίου",
+    "Μαΐου",
+    "Ιουνίου",
+    "Ιουλίου",
+    "Αυγούστου",
+    "Σεπτεμβρίου",
+    "Οκτωβρίου",
+    "Νοεμβρίου",
+    "Δεκεμβρίου",
+]
+DAYGR = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]
+DAYPGR = [
+    "Δευτέρας",
+    "Τρίτης",
+    "Τετάρτης",
+    "Πέμπτης",
+    "Παρασκευής",
+    "Σαββάτου",
+    "Κυριακής",
+]
 
 
 def iso2gr(date: str) -> str:
@@ -21,10 +49,10 @@ def iso2gr(date: str) -> str:
     """
     strdate = str(date)
     try:
-        year, month, day = strdate.split('-')
-        return '%s/%s/%s' % (day, month, year)
+        year, month, day = strdate.split("-")
+        return "%s/%s/%s" % (day, month, year)
     except ValueError:
-        return '01/01/1000'
+        return "01/01/1000"
 
 
 def gr2iso(grdate: str) -> str:
@@ -35,14 +63,14 @@ def gr2iso(grdate: str) -> str:
     """
     strdate = str(grdate)
     try:
-        day, month, year = strdate.split('/')
+        day, month, year = strdate.split("/")
     except ValueError:
-        return '1000-01-01'
+        return "1000-01-01"
     if len(month) > 2 or len(day) > 2 or len(year) != 4:
-        return '1000-01-01'
-    day = day if len(day) == 2 else '0' + day
-    month = month if len(month) == 2 else '0' + month
-    return '%s-%s-%s' % (year, month, day)
+        return "1000-01-01"
+    day = day if len(day) == 2 else "0" + day
+    month = month if len(month) == 2 else "0" + month
+    return "%s-%s-%s" % (year, month, day)
 
 
 def date2period_end(isodate: str) -> str:
@@ -51,18 +79,18 @@ def date2period_end(isodate: str) -> str:
     :param isodate:
     :return: YYYY-MM-LAST-DATE-OF-3MONTH
     """
-    year, month, _ = isodate.split('-')
+    year, month, _ = isodate.split("-")
     imonth = int(month)
     if imonth <= 3:
-        return '%s-%s-%s' % (year, '03', '31')
+        return "%s-%s-%s" % (year, "03", "31")
     elif imonth <= 6:
-        return '%s-%s-%s' % (year, '06', '30')
+        return "%s-%s-%s" % (year, "06", "30")
     elif imonth <= 9:
-        return '%s-%s-%s' % (year, '09', '30')
+        return "%s-%s-%s" % (year, "09", "30")
     elif imonth <= 12:
-        return '%s-%s-%s' % (year, '12', '31')
+        return "%s-%s-%s" % (year, "12", "31")
     else:
-        return '%s-%s-%s' % (year, '12', '31')
+        return "%s-%s-%s" % (year, "12", "31")
 
 
 def date2per(isodate: str, rate=2) -> str:
@@ -73,7 +101,7 @@ def date2per(isodate: str, rate=2) -> str:
     :return:
     """
     stt = "%s%s%s"
-    year, month, _ = isodate.split('-')
+    year, month, _ = isodate.split("-")
     if rate not in (1, 2, 3, 4, 6):
         return stt % (year, 1, 1)
     imonth = int(month)
@@ -91,11 +119,11 @@ def season(isodate: str, startmonth=10) -> str:
     :param startmonth:
     :return: (YYYY-YYYY)
     """
-    year, month, _ = isodate.split('-')
+    year, month, _ = isodate.split("-")
     if int(month) >= startmonth:
-        return '%s-%s' % (year, int(year) + 1)
+        return "%s-%s" % (year, int(year) + 1)
     else:
-        return '%s-%s' % (int(year) - 1, year)
+        return "%s-%s" % (int(year) - 1, year)
 
 
 def today(format_string: str = "%Y%m%d") -> str:

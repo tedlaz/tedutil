@@ -40,8 +40,8 @@ def dec_with_given_digits(num) -> Decimal:
     :return: decimal
     """
     stval = str(num)
-    if '.' in stval:
-        _, stdecv = stval.split('.')
+    if "." in stval:
+        _, stdecv = stval.split(".")
         decv = len(stdecv)
     else:
         decv = 0
@@ -57,12 +57,11 @@ def dec2gr(poso, decimals=2, zero_as_empty_space=True) -> str:
     :return: Greek formatted decimal string
     """
     tpo = dec(poso, decimals)
-    fst = '{:,.%sf}' % decimals
+    fst = "{:,.%sf}" % decimals
     if tpo == 0:
         if zero_as_empty_space:
-            return ''
-    return fst.format(tpo).replace(",", "X")\
-        .replace(".", ",").replace("X", ".")
+            return ""
+    return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def dic2gr(dic_of_decimals: dict) -> dict:
@@ -81,7 +80,7 @@ def gr2dec(strval, decimals=2) -> Decimal:
     :param decimals: Number of decimal digits
     :return: Python decimal number
     """
-    return dec(strval.replace('.', '').replace(',', '.'), decimals)
+    return dec(strval.replace(".", "").replace(",", "."), decimals)
 
 
 def split_val_to_list(val, alist: list, decimals: int = 2) -> list:
@@ -172,13 +171,13 @@ def eisfores(value, penos, ptotal, orio=None, decimals: int = 2) -> dict:
     cost2 = round(total + clean, decimals)
     assert cost == cost2
     return {
-        'value': init_val,
-        'value4calc': value,
-        'enos': enos,
-        'etis': etis,
-        'total': total,
-        'clean': clean,
-        'cost': cost
+        "value": init_val,
+        "value4calc": value,
+        "enos": enos,
+        "etis": etis,
+        "total": total,
+        "clean": clean,
+        "cost": cost,
     }
 
 
@@ -189,4 +188,4 @@ def dic_print(dic, format="%-30s: %12s") -> str:
     :param format: Format string
     :return: string of formatted pairs
     """
-    return('\n'.join(format % (i, j) for i, j in dic.items()))
+    return "\n".join(format % (i, j) for i, j in dic.items())

@@ -4,7 +4,7 @@ from tedutil.grtext import grup
 
 
 class FixedSizeField:
-    """""Abstract class"""""
+    """""Abstract class""" ""
 
     def __init__(self, siz) -> None:
         self.length = siz
@@ -17,7 +17,7 @@ class FixedSizeField:
 
 
 class StaticField(FixedSizeField):
-    """Just a fixed value ABCD -> ABCD """
+    """Just a fixed value ABCD -> ABCD"""
 
     def __init__(self, val) -> None:
         self.val = grup(val)
@@ -46,44 +46,44 @@ class Filler(FixedSizeField):
 
 
 class ZeroesTextField(FixedSizeField):
-    """ 123 -> '0000123' """
+    """123 -> '0000123'"""
 
     def text(self, val) -> str:
         txt = str(val)
         txt_len = len(txt)
         if txt_len > self.length:
-            raise ValueError('text length is bigger than allowed')
-        zeroes = '0' * (self.length - txt_len)
+            raise ValueError("text length is bigger than allowed")
+        zeroes = "0" * (self.length - txt_len)
         return zeroes + txt
 
     def revert(self, txtval: str) -> str:
-        return txtval.strip().lstrip('0')
+        return txtval.strip().lstrip("0")
 
 
 class Decimal2Field(FixedSizeField):
-    """Decimal with 2 decimal digits 123.45 -> '0000012345' """
+    """Decimal with 2 decimal digits 123.45 -> '0000012345'"""
 
     def text(self, val) -> str:
-        txt = str(round(dec(val), 2)).replace('.', '')
+        txt = str(round(dec(val), 2)).replace(".", "")
         txt_len = len(txt)
         if txt_len > self.length:
-            raise ValueError('text length is bigger than allowed')
-        zeroes = '0' * (self.length - txt_len)
+            raise ValueError("text length is bigger than allowed")
+        zeroes = "0" * (self.length - txt_len)
         return zeroes + txt
 
     def revert(self, txtval) -> dec:
-        return round(dec(txtval.strip().lstrip('0')) / dec(100), 2)
+        return round(dec(txtval.strip().lstrip("0")) / dec(100), 2)
 
 
 class TextSpacesField(FixedSizeField):
-    """ 'abc' -> 'abc    ' """
+    """'abc' -> 'abc    '"""
 
     def text(self, val) -> str:
         txt = grup(val)
         txt_len = len(txt)
         if txt_len > self.length:
-            raise ValueError('text length is bigger than allowed')
-        spaces = ' ' * (self.length - txt_len)
+            raise ValueError("text length is bigger than allowed")
+        spaces = " " * (self.length - txt_len)
         return txt + spaces
 
     def revert(self, txtval: str) -> str:
@@ -91,14 +91,14 @@ class TextSpacesField(FixedSizeField):
 
 
 class SpacesTextField(FixedSizeField):
-    """ 'abc' -> '    abc' """
+    """'abc' -> '    abc'"""
 
     def text(self, val) -> str:
         txt = grup(val)
         txt_len = len(txt)
         if txt_len > self.length:
-            raise ValueError('text length is bigger than allowed')
-        spaces = ' ' * (self.length - txt_len)
+            raise ValueError("text length is bigger than allowed")
+        spaces = " " * (self.length - txt_len)
         return spaces + txt
 
     def revert(self, txtval: str) -> str:
@@ -106,39 +106,39 @@ class SpacesTextField(FixedSizeField):
 
 
 class Date2dmyField(FixedSizeField):
-    """Iso date to text YYYY-MM-DD -> DDMMYYYY """
+    """Iso date to text YYYY-MM-DD -> DDMMYYYY"""
 
     def __init__(self):
         super().__init__(8)
 
     def text(self, isodate: str) -> str:
         assert len(isodate) == 10
-        year, month, day = isodate.split('-')
-        return f'{day}{month}{year}'
+        year, month, day = isodate.split("-")
+        return f"{day}{month}{year}"
 
     def revert(self, txtval: str) -> str:
         day = txtval[:2]
         month = txtval[2:4]
         year = txtval[4:]
-        return f'{year}-{month}-{day}'
+        return f"{year}-{month}-{day}"
 
 
 class Date2ymdField(FixedSizeField):
-    """Iso date to text YYYY-MM-DD -> YYYYMMDD """
+    """Iso date to text YYYY-MM-DD -> YYYYMMDD"""
 
     def __init__(self):
         super().__init__(8)
 
     def text(self, isodate: str) -> str:
         assert len(isodate) == 10
-        year, month, date = isodate.split('-')
-        return f'{year}{month}{date}'
+        year, month, date = isodate.split("-")
+        return f"{year}{month}{date}"
 
     def revert(self, txtval: str) -> str:
         year = txtval[:4]
         month = txtval[4:6]
         day = txtval[6:]
-        return f'{year}-{month}-{day}'
+        return f"{year}-{month}-{day}"
 
 
 def fld(fname: str, **pars):
@@ -152,18 +152,18 @@ def fld(fname: str, **pars):
         FixedSizeField:
     """
     flds = {
-        'static': StaticField,
-        'fill': Filler,
-        '0txt': ZeroesTextField,
-        'dec2': Decimal2Field,
-        '_txt': SpacesTextField,
-        'txt_': TextSpacesField,
-        'dmy': Date2dmyField,
-        'ymd': Date2ymdField
+        "static": StaticField,
+        "fill": Filler,
+        "0txt": ZeroesTextField,
+        "dec2": Decimal2Field,
+        "_txt": SpacesTextField,
+        "txt_": TextSpacesField,
+        "dmy": Date2dmyField,
+        "ymd": Date2ymdField,
     }
     if fname in flds:
         return flds[fname](**pars)
-    raise ValueError(f'name {fname} is not valid')
+    raise ValueError(f"name {fname} is not valid")
 
 
 class LinePrototype:
@@ -178,7 +178,7 @@ class LinePrototype:
 
     def add_field(self, name: str, field_object, label=None) -> None:
         if name in self.names:
-            raise ValueError(f'name {name} already exists')
+            raise ValueError(f"name {name} already exists")
         self.names.append(name)
         self.fields.append(field_object)
         if label is None:
@@ -188,11 +188,11 @@ class LinePrototype:
 
     def revert(self, textval: str) -> dict:
         assert len(textval) == self.line_size
-        fdi = {'lineid': self.code}
-        clean_val = textval[len(self.code):]
+        fdi = {"lineid": self.code}
+        clean_val = textval[len(self.code) :]
         step = 0
         for i, name in enumerate(self.names):
-            txval = clean_val[step:step+self.fields[i].length]
+            txval = clean_val[step : step + self.fields[i].length]
             fdi[name] = self.fields[i].revert(txval)
             step += self.fields[i].length
         return fdi
@@ -210,8 +210,8 @@ class LinePrototype:
 
     def __str__(self) -> str:
         return (
-            f'{self.per} με κωδικό {self.code} και πεδία {self.names} '
-            f'συνολικού μεγέθους {self.line_size} χαρακτήρων'
+            f"{self.per} με κωδικό {self.code} και πεδία {self.names} "
+            f"συνολικού μεγέθους {self.line_size} χαρακτήρων"
         )
 
 
@@ -224,7 +224,7 @@ class DataLine:
 
     def add_val(self, name: str, value) -> None:
         if name not in self.prototype.names:
-            raise ValueError(f'Invalid name {name}')
+            raise ValueError(f"Invalid name {name}")
         self.values[name] = value
 
     def add_vals(self, nvdic) -> None:
@@ -234,7 +234,7 @@ class DataLine:
     def text(self) -> str:
         txt = self.prototype.code
         for i, name in enumerate(self.prototype.names):
-            txt += self.prototype.fields[i].text(self.values.get(name, ''))
+            txt += self.prototype.fields[i].text(self.values.get(name, ""))
         return txt
 
 
@@ -272,17 +272,17 @@ class TextFile:
         self.lines.append(DataLine(self.protolines[protoline_key], linedic))
 
     def text(self) -> str:
-        return '\n'.join([lin.text() for lin in self.lines])
+        return "\n".join([lin.text() for lin in self.lines])
 
-    def text2file(self, filename, encoding='WINDOWS-1253'):
+    def text2file(self, filename, encoding="WINDOWS-1253"):
         if os.path.exists(filename):
-            raise FileExistsError(f'file {filename} already exists.')
-        with open(filename, 'w', encoding=encoding) as fil:
+            raise FileExistsError(f"file {filename} already exists.")
+        with open(filename, "w", encoding=encoding) as fil:
             fil.write(self.text())
         return True
 
     def revert(self, txt_lines) -> list:
-        lines = txt_lines.split('\n')
+        lines = txt_lines.split("\n")
         result = []
         for line in lines:
             for sign, protoline in self.line_signs.items():

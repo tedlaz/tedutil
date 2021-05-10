@@ -39,9 +39,9 @@ def is_amka(amka) -> bool:
 def is_greek_date(strdate) -> bool:
     if not type(strdate) == str:
         return False
-    if strdate.count('/') != 2:
+    if strdate.count("/") != 2:
         return False
-    day, month, year = strdate.split('/')
+    day, month, year = strdate.split("/")
     try:
         day, month, year = int(day), int(month), int(year)
     except Exception:
@@ -58,9 +58,9 @@ def is_iso_date(strdate) -> bool:
         return False
     if len(strdate) != 10:
         return False
-    if strdate.count('-') != 2:
+    if strdate.count("-") != 2:
         return False
-    year, month, day = strdate.split('-')
+    year, month, day = strdate.split("-")
     try:
         day, month, year = int(day), int(month), int(year)
     except Exception:

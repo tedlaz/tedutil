@@ -3,6 +3,7 @@ from decimal import Decimal
 from tedutil.dec import dec
 from tedutil.dec import klimaka
 from tedutil.grdate import today
+
 # Πριν το 2002 το νόμισμα ήταν η δραχμή
 KLI = {
     2002: ((7400, 1000, 5000, 10000), (0, 5, 15, 30, 40)),
@@ -13,12 +14,18 @@ KLI = {
     2007: ((12000, 18000, 45000), (0, 27, 39, 40)),
     2008: ((12000, 18000, 45000), (0, 27, 37, 40)),
     2009: ((12000, 18000, 45000), (0, 25, 35, 40)),
-    2010: ((12000, 4000, 6000, 4000, 6000, 8000, 20000, 40000),
-           (0, 18, 24, 26, 32, 36, 38, 40, 45)),
-    2011: ((5000, 7000, 4000, 10000, 14000, 20000, 40000),
-           (0, 10, 18, 25, 35, 38, 40, 45)),
-    2012: ((5000, 7000, 4000, 10000, 14000, 20000, 40000),
-           (0, 10, 18, 25, 35, 38, 40, 45)),
+    2010: (
+        (12000, 4000, 6000, 4000, 6000, 8000, 20000, 40000),
+        (0, 18, 24, 26, 32, 36, 38, 40, 45),
+    ),
+    2011: (
+        (5000, 7000, 4000, 10000, 14000, 20000, 40000),
+        (0, 10, 18, 25, 35, 38, 40, 45),
+    ),
+    2012: (
+        (5000, 7000, 4000, 10000, 14000, 20000, 40000),
+        (0, 10, 18, 25, 35, 38, 40, 45),
+    ),
     2013: ((25000, 17000), (22, 32, 42)),
     2014: ((25000, 17000), (22, 32, 42)),
     2015: ((25000, 17000), (22, 32, 42)),
@@ -39,14 +46,10 @@ MEI = {
 }
 
 EEA = {
-    2018: ((12000, 8000, 10000, 10000, 25000, 155000),
-           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
-    2019: ((12000, 8000, 10000, 10000, 25000, 155000),
-           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
-    2020: ((12000, 8000, 10000, 10000, 25000, 155000),
-           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
-    2021: ((12000, 8000, 10000, 10000, 25000, 155000),
-           (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2018: ((12000, 8000, 10000, 10000, 25000, 155000), (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2019: ((12000, 8000, 10000, 10000, 25000, 155000), (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2020: ((12000, 8000, 10000, 10000, 25000, 155000), (0, 2.2, 5, 6.5, 7.5, 9, 10)),
+    2021: ((12000, 8000, 10000, 10000, 25000, 155000), (0, 2.2, 5, 6.5, 7.5, 9, 10)),
 }
 
 
@@ -166,7 +169,7 @@ def foros_eea_periodoy(year, apodoxes, barytis=14, paidia=0, extra=0):
     eea = eea_periodoy(year, apodoxes, barytis, extra)
     apod = dec(apodoxes + extra)
     kath = apod - foros - eea
-    return {'foros': foros, 'eea': eea, 'forolog': apod, 'pliroteo': kath}
+    return {"foros": foros, "eea": eea, "forolog": apod, "pliroteo": kath}
 
 
 def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
@@ -183,20 +186,20 @@ def reverse_apodoxes(year, katharo, pikaerg, paidia=0):
     mikto = dec(katharo / synt1)
     apot = foros_eea_periodoy(year, katharo)
 
-    delta = katharo - apot['pliroteo']
+    delta = katharo - apot["pliroteo"]
     # print(pros1, delta, apot)
     i = 0
     while delta > 0 and i < 100:
         i += 1
         mikto += delta
         ap2 = foros_eea_periodoy(year, mikto * synt1, paidia=paidia)
-        delta = katharo - ap2['pliroteo']
+        delta = katharo - ap2["pliroteo"]
     return mikto
 
 
 def mikta_apo_kathara(katharo, pika, paidia=0, period=None):
     if period is None:
-        period = today('%Y%m')
+        period = today("%Y%m")
     period = str(period)
     year = period[:4]
     return reverse_apodoxes(year, katharo, pika, paidia)
@@ -207,11 +210,11 @@ def test_apodoxes(year, mikto, pikaerg, paidia=0):
     krika = dec(mikto * dec(pikaerg, 4) / dec(100))
     forol = mikto - krika
     result = foros_eea_periodoy(year, forol, paidia=paidia)
-    result['paidia'] = paidia
-    result['mikto'] = mikto
-    result['pika'] = '%s%%' % pikaerg
-    result['ika'] = krika
-    result['krat'] = result['foros'] + result['eea'] + result['ika']
+    result["paidia"] = paidia
+    result["mikto"] = mikto
+    result["pika"] = "%s%%" % pikaerg
+    result["ika"] = krika
+    result["krat"] = result["foros"] + result["eea"] + result["ika"]
     return result
 
 
@@ -250,17 +253,17 @@ def foros2020(income, children=0):
     eea_pos = (0, 2.2, 5, 6.5, 7.5, 9, 10)
     eea = klimaka(income, eea_kli, eea_pos)
     return {
-        'income': income,
-        'children': children,
-        'foros-xoris-ekptosi': foros_xoris_meiosi,
-        'ekptosi-klimakas': meiosi_total,
-        'meiosi-ekptosis': meiosi_meiosis,
-        'ekptosi-teliki': meiosi,
-        'foros': foros,
-        'eea': eea,
-        'foros-eea': foros + eea,
-        'pososto': round((foros + eea) / income * dec(100), 2),
-        'pliroteo': income - foros - eea
+        "income": income,
+        "children": children,
+        "foros-xoris-ekptosi": foros_xoris_meiosi,
+        "ekptosi-klimakas": meiosi_total,
+        "meiosi-ekptosis": meiosi_meiosis,
+        "ekptosi-teliki": meiosi,
+        "foros": foros,
+        "eea": eea,
+        "foros-eea": foros + eea,
+        "pososto": round((foros + eea) / income * dec(100), 2),
+        "pliroteo": income - foros - eea,
     }
 
 
@@ -269,4 +272,4 @@ def foros(etos, income, children=0):
     ietos = int(etos)
     if ietos in forosd:
         return forosd[ietos](income, children)
-    raise ValueError(f'Δεν υπάρχει υπολογισμός για το έτος {etos}')
+    raise ValueError(f"Δεν υπάρχει υπολογισμός για το έτος {etos}")

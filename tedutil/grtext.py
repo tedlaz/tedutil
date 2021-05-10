@@ -13,10 +13,10 @@ def grup(txtval: str) -> str:
     for i, letter in enumerate(ftxt):
         if letter in ar1:
             ftxt[i] = ar2[ar1.index(letter)]
-    return ''.join(ftxt)
+    return "".join(ftxt)
 
 
-def split_strip(text_line: str, separator='|') -> list:
+def split_strip(text_line: str, separator="|") -> list:
     """Split and strip a txt
 
     :param text_line:
