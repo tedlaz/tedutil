@@ -1,6 +1,4 @@
-from collections import namedtuple
-
-Tap = namedtuple("Tap", "normal argia_ores argia_meres nyxta total")
+"""Greek Payroll classes"""
 
 
 class Ergazomenos:
@@ -8,6 +6,7 @@ class Ergazomenos:
     WEEK_HOURS = 40
     NYXTA_PROS = 0.25
     ARGIA_PROS = 0.75
+    DORO_PROS = 1.04167
 
     @property
     def hmeromisthio(self):
@@ -50,6 +49,13 @@ class Ergazomenos:
     def apodoxes_periodoy(self, meres_ores):
         raise NotImplementedError
 
+    def apodoxes_astheneias(self, meres_l3=0, meres_m3=0, apozimiosi_efka=0):
+        """Αποδοχές ασθενείας"""
+        apl3 = round(self.hmeromisthio * meres_l3 / 2, 2)
+        apm3 = round(self.hmeromisthio * meres_m3, 2)
+        total = round(apl3 + apm3, 2)
+        return {"total": total, "apozimiosi": apozimiosi_efka}
+
 
 class Misthotos(Ergazomenos):
     MONTH_DAYS = 25
@@ -59,24 +65,59 @@ class Misthotos(Ergazomenos):
 
     @property
     def misthos(self):
+        """Μισθωτοί: Μισθός"""
         return self._misthos
 
     @property
     def hmeromisthio(self):
+        """Μισθωτοί: Ημερομίσθιο"""
         return self.misthos / self.MONTH_DAYS
 
     @property
     def oromisthio(self):
+        """Μισθωτοί: Ωρομίσθιο"""
         return self.hmeromisthio * self.WEEK_DAYS / self.WEEK_HOURS
 
-    def apodoxes_periodoy(self, meres, argia_meres=0, argia_ores=0, nyxta_ores=0):
-        a_normal = round(meres / self.MONTH_DAYS * self.misthos, 2)
+    def apodoxes_periodoy(
+        self, meres, extra_ores=0, argia_meres=0, argia_ores=0, nyxta_ores=0
+    ):
+        """Μισθωτοί: Αποδοχές Περιόδου"""
+        a_meres = round(meres / self.MONTH_DAYS * self.misthos, 2)
+        a_ores = round(self.oromisthio * extra_ores, 2)
         a_argia_meres = round(argia_meres * self.hmeromisthio_argia_p, 2)
         a_argia_ores = round(argia_ores * self.oromisthio_argia_p, 2)
         a_nyxta_ores = round(nyxta_ores * self.oromisthio_nyxta_p, 2)
-        apod = round(a_normal + a_argia_meres + a_argia_ores + a_nyxta_ores, 2)
-        return Tap(a_normal, a_argia_ores, a_argia_meres, a_nyxta_ores, apod)
+        apod = round(a_meres + a_ores + a_argia_meres + a_argia_ores + a_nyxta_ores, 2)
+        return {
+            "meres_ika": meres,
+            "argies_ika": argia_meres,
+            "apodoxes_meres": a_meres,
+            "apodoxes_ores": a_ores,
+            "apodoxes_argia_ores": a_argia_ores,
+            "apodoxes_argia_meres": a_argia_meres,
+            "apodoxes_nyxta": a_nyxta_ores,
+            "total": apod,
+        }
 
+    def apodoxes_dpasxa(self, meres):
+        """Μισθωτοί: Αποδοχές Δώρου Πάσχα"""
+        fmeres = meres if meres < 100 else 100
+        apod = round(self.misthos / 2 * fmeres / 100 * self.DORO_PROS, 2)
+        return {"meres_ika": 0, "total": apod}
+
+    def apodoxes_dxrist(self, meres):
+        """Μισθωτοί: Αποδοχές Δώρου Χριστουγέννων"""
+        fmeres = meres if meres < 200 else 200
+        apod = round(self.misthos * fmeres / 200 * self.DORO_PROS, 2)
+        return {"meres_ika": 0, "total": apod}
+
+    def apodoxes_epidomatos_adeias(self, meres):
+        """Μισθωτοί: Αποδοχές επιδόματος αδείας"""
+        fmeres = meres if meres < 150 else 150
+
+    def apozimiosi_apolysis(self, proslipsi_date):
+        """Μισθωτοί: Αποζημίωση απόλυσης"""
+        pass
 
 
 class Hmeromisthios(Ergazomenos):
@@ -87,29 +128,61 @@ class Hmeromisthios(Ergazomenos):
 
     @property
     def hmeromisthio(self):
+        """Ημερομίσθιοι: Ημερομίσθιο"""
         return self._hmeromisthio
 
     @property
     def misthos(self):
+        """Ημερομίσθιοι: Μισθός (Ημερομίσθιο Χ 26 ημέρες)"""
         self._hmeromisthio * self.MONTH_DAYS
 
     @property
     def oromisthio(self):
+        """Ημερομίσθιοι: Ωρομίσθιο"""
         return self.hmeromisthio * self.WEEK_DAYS / self.WEEK_HOURS
 
-    def apodoxes_periodoy(self, meres, argia_meres=0, argia_ores=0, nyxta_ores=0):
-        a_normal = round(meres * self.hmeromisthio, 2)
+    def apodoxes_periodoy(
+        self, meres, extra_ores=0, argia_meres=0, argia_ores=0, nyxta_ores=0
+    ):
+        """Ημερομίσθιοι: Αποδοχές περιόδου"""
+        a_meres = round(meres * self.hmeromisthio, 2)
+        a_ores = round(self.oromisthio * extra_ores, 2)
         a_argia_meres = round(argia_meres * self.hmeromisthio_argia_p, 2)
         a_argia_ores = round(argia_ores * self.oromisthio_argia_p, 2)
         a_nyxta_ores = round(nyxta_ores * self.oromisthio_nyxta_p, 2)
-        apod = round(a_normal + a_argia_meres + a_argia_ores + a_nyxta_ores, 2)
+        apod = round(a_meres + a_ores + a_argia_meres + a_argia_ores + a_nyxta_ores, 2)
         return {
-            "apodoxes_meres": a_normal,
+            "meres_ika": meres,
+            "argies_ika": argia_meres,
+            "apodoxes_meres": a_meres,
+            "apodoxes_ores": a_ores,
             "apodoxes_argia_ores": a_argia_ores,
             "apodoxes_argia_meres": a_argia_meres,
-            "apodoxes_nyxta_ores": a_nyxta_ores,
-            "apodoxes_periodoy": apod,
+            "apodoxes_nyxta": a_nyxta_ores,
+            "total": apod,
         }
+
+    def apodoxes_dpasxa(self, meres):
+        """Ημερομίσθιοι: Αποδοχές Δώρου Πάσχα"""
+        fmeres = meres if meres < 100 else 100
+        apod = round(self.hmeromisthio * 15 * fmeres / 100 * self.DORO_PROS, 2)
+        return {"meres_ika": 0, "total": apod}
+
+    def apodoxes_dxrist(self, meres):
+        """Ημερομίσθιοι: Αποδοχές Δώρου Χριστουγέννων"""
+        fmeres = meres if meres < 200 else 200
+        apod = round(self.hmeromisthio * 25 * fmeres / 200 * self.DORO_PROS, 2)
+        return {"meres_ika": 0, "total": apod}
+
+    def apodoxes_epidomatos_adeias(self, meres):
+        """Ημερομίσθιοι: Αποδοχές Επιδόματος Αδείας"""
+        fmeres = meres if meres < 150 else 150
+        apod = self.hmeromisthio * 13 * fmeres / 150
+        return {"meres_ika": 0, "total": apod}
+
+    def apozimiosi_apolysis(self, proslipsi_date):
+        """Ημερομίσθιοι: Αποζημίωση απόλυσης"""
+        pass
 
 
 class Oromisthios(Ergazomenos):
@@ -118,7 +191,18 @@ class Oromisthios(Ergazomenos):
 
     @property
     def oromisthio(self):
+        """Ωρομίσθιοι: Ωρομίσθιο"""
         return self._oromisthio
 
-    def apodoxes_periodoy(self, ores):
-        return ores * self.oromisthio
+    @property
+    def hmeromisthio(self):
+        """Ωρομίσθιοι: Ημερομίσθιο (με αναγωγή στις 6,67 ώρες/μέρα)"""
+        return round(self.oromisthio * self.WEEK_HOURS / self.WEEK_DAYS, 2)
+
+    @property
+    def misthos(self):
+        raise NotImplementedError("Δεν έχουν μισθό οι ωρομίσθιοι")
+
+    def apodoxes_periodoy(self, ores, argia_ores=0, nyxta_ores=0):
+        """Ωρομίσθιοι: Αποδοχές περιόδου"""
+        return round(ores * self.oromisthio, 2)
