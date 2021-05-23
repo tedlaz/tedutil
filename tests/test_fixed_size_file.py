@@ -1,8 +1,11 @@
 from decimal import Decimal
 from unittest import TestCase
 import os
+import pytest
 from tedutil.fixed_size_file import LinePrototype, TextFile, fld
 from tedutil import fixed_size_file as fsf
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 tx1 = """1ΛΑΖΑΡΟΣ                          00000000000000123454CSL01   15012020
 2000000011534900000009000000010026000000024058
@@ -102,7 +105,7 @@ class Test_Fixed_Size(TestCase):
         txt1 = csl.text()
         self.assertEqual(txt1, tx1)
         self.assertEqual(di1, csl.revert(txt1))
-        file_path = "tst334456"
+        file_path = os.path.join(dir_path, "tst334456")
         try:
             csl.text2file(file_path)
             with open(file_path, encoding="WINDOWS-1253") as fil:
@@ -110,6 +113,10 @@ class Test_Fixed_Size(TestCase):
         finally:
             os.remove(file_path)
         self.assertEqual(contents, tx1)
+        file_path = os.path.join(dir_path, "test_fixed_size_file.py")
+        with pytest.raises(FileExistsError):
+            csl.text2file(file_path)
+
 
     def test2(self):
         ztf1 = fsf.ZeroesTextField(2)

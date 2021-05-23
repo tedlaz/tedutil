@@ -1,5 +1,14 @@
+import pytest
 from tedutil import payroll as pay
 
+def test_not_implemented():
+    erg = pay.Ergazomenos()
+    with pytest.raises(NotImplementedError):
+        erg.apodoxes_periodoy(10)
+        erg.apodoxes_dpasxa()
+        erg.apodoxes_dxrist(10)
+        erg.apodoxes_epadeias(10)
+        erg.apozimiosi_apolysis()
 
 def test_misthotos():
     mis = pay.Misthotos(740)
@@ -7,6 +16,8 @@ def test_misthotos():
     assert mis.oromisthio == 4.44
     assert mis.oromisthio_nyxta == 5.55
     assert mis.oromisthio_nyxta_p == 1.11
+    assert mis.oromisthio_argia  == 7.77
+    assert mis.hmeromisthio_argia == 51.8
     apod = mis.apodoxes_periodoy(10, nyxta_ores=11)
     assert apod["total"] == 308.21
     assert mis.apodoxes_dpasxa(100)["total"] == 385.42
@@ -22,6 +33,7 @@ def test_misthotos():
 
 def test_hmeromisthios():
     ime = pay.Hmeromisthios(29.6)
+    assert ime.misthos == 769.6
     assert ime.oromisthio == 4.44
     assert ime.oromisthio_nyxta == 5.55
     assert ime.oromisthio_nyxta_p == 1.11
@@ -36,10 +48,14 @@ def test_hmeromisthios():
     assert ime.apodoxes_epadeias(150)["total"] == 384.8
     assert ime.apodoxes_epadeias(151)["total"] == 384.8
     assert ime.apodoxes_epadeias(300)["total"] == 384.8
+    with pytest.raises(ValueError):
+        ime.selector('notValid')
 
 
 def test_oromisthios():
     oro = pay.Oromisthios(4.44)
+    with pytest.raises(NotImplementedError):
+        oro.misthos
     assert oro.oromisthio == 4.44
     assert oro.hmeromisthio == 29.6
     assert oro.oromisthio_nyxta == 5.55
@@ -57,5 +73,10 @@ def test_oromisthios():
 def test_factories():
     assert pay.apod("mi", "ap", 750, meres=25)["total"] == 750
     assert pay.apod("mi", "dp", 750, meres=101)["total"] == 390.63
-    # print(pay.apod("hm", "ap", 30, meres=10))
-    # print(pay.apod("or", "ap", 7.5, ores=10))
+    assert pay.apod("mi", "dx", 740, meres=200)["total"] == 770.84
+    assert pay.apod("mi", "ea", 740, meres=150)["total"] == 370
+    assert pay.apod("mi", "aa", 740, meres_l3=3)["total"] == 44.4
+    assert pay.apod("mi", "apolysi", 740, proslipsi_date="2015-02-13")["total"] == 0
+    assert pay.apod("im", "apolysi", 30, proslipsi_date="2015-02-13")["total"] == 0
+    assert pay.apod("or", "apolysi", 7.5, proslipsi_date="2015-02-13")["total"] == 0
+

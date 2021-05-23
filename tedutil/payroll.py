@@ -65,6 +65,9 @@ class Ergazomenos:
         total = round(apl3 + apm3, 2)
         return {"total": total, "apozimiosi": apozimiosi_efka}
 
+    def apozimiosi_apolysis(self):
+        raise NotImplementedError
+
     def selector(self, sel, **args):
         if sel == "ap":
             return self.apodoxes_periodoy(**args)
@@ -77,7 +80,7 @@ class Ergazomenos:
         elif sel == "aa":
             return self.apodoxes_astheneias(**args)
         elif sel == "apolysi":
-            pass
+            return self.apozimiosi_apolysis(**args)
         else:
             raise ValueError(f"value {sel} for parameter sel is invalid")
 
@@ -180,10 +183,7 @@ class Misthotos(Ergazomenos):
 
     def apozimiosi_apolysis(self, proslipsi_date):
         """Μισθωτοί: Αποζημίωση απόλυσης"""
-        return {
-            "erg_type": self.TYPOS,
-            "mis_type": "apozimiosi_apolysis",
-        }
+        return {"erg_type": self.TYPOS, "mis_type": "apozimiosi_apolysis", "total": 0}
 
 
 class Hmeromisthios(Ergazomenos):
@@ -201,7 +201,7 @@ class Hmeromisthios(Ergazomenos):
     @property
     def misthos(self):
         """Ημερομίσθιοι: Μισθός (Ημερομίσθιο Χ 26 ημέρες)"""
-        self._hmeromisthio * self.MONTH_DAYS
+        return self._hmeromisthio * self.MONTH_DAYS
 
     @property
     def oromisthio(self):
@@ -284,10 +284,7 @@ class Hmeromisthios(Ergazomenos):
 
     def apozimiosi_apolysis(self, proslipsi_date):
         """Ημερομίσθιοι: Αποζημίωση απόλυσης"""
-        return {
-            "erg_type": self.TYPOS,
-            "mis_type": "apozimiosi_apolysis",
-        }
+        return {"erg_type": self.TYPOS, "mis_type": "apozimiosi_apolysis", "total": 0}
 
 
 class Oromisthios(Ergazomenos):
@@ -386,10 +383,7 @@ class Oromisthios(Ergazomenos):
 
     def apozimiosi_apolysis(self, proslipsi_date):
         """Ωρομίσθιοι: Αποζημίωση απόλυσης"""
-        return {
-            "erg_type": self.TYPOS,
-            "mis_type": "apozimiosi_apolysis",
-        }
+        return {"erg_type": self.TYPOS, "mis_type": "apozimiosi_apolysis", "total": 0}
 
 
 # Factory methods here
