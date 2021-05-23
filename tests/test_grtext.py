@@ -14,3 +14,8 @@ class TestGrup(TestCase):
 
     def test_split_strip(self):
         self.assertEqual(grt.split_strip("this|is|ted"), ["this", "is", "ted"])
+
+    def test_split_text_number(self):
+        self.assertEqual(grt.split_text_number("ΤΔΑ101"), ("ΤΔΑ", "101"))
+        self.assertEqual(grt.split_text_number("ΤΔΑ 101"), ("ΤΔΑ", "101"))
+        self.assertEqual(grt.split_text_number("1τδα101β"), ("1τδα101β",))

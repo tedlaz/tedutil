@@ -1,3 +1,5 @@
+"""Library to read and write fixed size text data files
+"""
 from decimal import Decimal as dec
 import os
 from tedutil.grtext import grup

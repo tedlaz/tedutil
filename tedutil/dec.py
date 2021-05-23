@@ -48,7 +48,7 @@ def dec_with_given_digits(num) -> Decimal:
     return dec(num, decv)
 
 
-def dec2gr(poso, decimals=2, zero_as_empty_space=True) -> str:
+def dec2gr(poso, decimals=2, zero_as_empty_string=True) -> str:
     """Greek formated decimal to string
 
     :param poso: Python decimal number
@@ -59,7 +59,7 @@ def dec2gr(poso, decimals=2, zero_as_empty_space=True) -> str:
     tpo = dec(poso, decimals)
     fst = "{:,.%sf}" % decimals
     if tpo == 0:
-        if zero_as_empty_space:
+        if zero_as_empty_string:
             return ""
     return fst.format(tpo).replace(",", "X").replace(".", ",").replace("X", ".")
 
@@ -121,7 +121,7 @@ def klimaka(value, scale, percent):
 
 
 def distribute(value, alist: list, decimals: int = 2) -> list:
-    """Distributes value according alist distribution
+    """Distributes value according to alist
 
     :param value: Value to be distributed
     :param alist: Distribution list/ tuple
@@ -131,7 +131,7 @@ def distribute(value, alist: list, decimals: int = 2) -> list:
     value = dec(value, decimals)
     totald = dec(sum(alist), decimals)
     dist = [dec(value * dec(i, decimals) / totald, decimals) for i in alist]
-    rest = value - sum(dist)  # if there is a diff
+    rest = value - sum(dist)  # if there is a rest
     dist[dist.index(max(dist))] += rest  # add it to max value
     return dist
 
