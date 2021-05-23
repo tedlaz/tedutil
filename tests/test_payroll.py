@@ -4,10 +4,18 @@ from tedutil import payroll as pay
 def test_not_implemented():
     erg = pay.Ergazomenos()
     with pytest.raises(NotImplementedError):
+        erg.hmeromisthio
+    with pytest.raises(NotImplementedError):
+        erg.oromisthio
+    with pytest.raises(NotImplementedError):
         erg.apodoxes_periodoy(10)
+    with pytest.raises(NotImplementedError):
         erg.apodoxes_dpasxa()
+    with pytest.raises(NotImplementedError):
         erg.apodoxes_dxrist(10)
+    with pytest.raises(NotImplementedError):
         erg.apodoxes_epadeias(10)
+    with pytest.raises(NotImplementedError):
         erg.apozimiosi_apolysis()
 
 def test_misthotos():
