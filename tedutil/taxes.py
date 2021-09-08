@@ -273,3 +273,54 @@ def foros(etos, income, children=0):
     if ietos in forosd:
         return forosd[ietos](income, children)
     raise ValueError(f"Δεν υπάρχει υπολογισμός για το έτος {etos}")
+
+
+class Foros2020:
+    def meiosi_paidion(self, paidia=0):
+        assert paidia >= 0
+        paidia_meiosi = {0: 777, 1: 810, 2: 900, 3: 1120, 4: 1340, 5: 1560}
+        return paidia_meiosi.get(paidia, paidia_meiosi[5])
+
+    def meiosi_foroy(self, income, children=0):
+        meiosi = self.meiosi_paidion(children)
+        if income <= 12000:
+            return meiosi
+        delta = income - 12000
+        meiosi -= delta * 0.02
+        if meiosi < 0:
+            return 0
+        return round(meiosi, 2)
+
+    def foros_misthoton(self, income):
+        scale = (10000, 10000, 10000, 10000)
+        syntelestes = (9, 22, 28, 36, 44)
+        return float(klimaka(income, scale, syntelestes))
+
+    def foros_tokon(self, amount):
+        return round(amount * 0.15, 2)
+
+    def foros_enoikion(self, amount):
+        return round(amount * 0.15, 2)
+
+    def foros_total(self, misthotes, enoikia, tokoi, paidia=0):
+        fmisthoton = self.foros_misthoton(misthotes)
+        meiosi = self.meiosi_foroy(misthotes, paidia)
+        fmis = fmisthoton - meiosi
+        if fmis < 0:
+            fmis = 0
+        enoikia_final = enoikia - round(enoikia * 0.05, 2)
+        fenoikia = self.foros_enoikion(enoikia_final)
+        ftokon = self.foros_tokon(tokoi)
+        tforos = round(fmisthoton + fenoikia + ftokon, 2)
+        return {
+            "misthoi": misthotes,
+            "enoikia": enoikia_final,
+            "tokoi": tokoi,
+            "total_income": enoikia_final + tokoi + misthotes,
+            "foros_misthoton": fmis,
+            "foros_enoikion": fenoikia,
+            "foros_tokon": ftokon,
+            "total_foros": tforos,
+            "meiosi_foroy": meiosi,
+            "final_foros": fmis + fenoikia + ftokon,
+        }

@@ -69,20 +69,15 @@ class Ergazomenos:
         raise NotImplementedError
 
     def selector(self, sel, **args):
-        if sel == "ap":
-            return self.apodoxes_periodoy(**args)
-        elif sel == "dp":
-            return self.apodoxes_dpasxa(**args)
-        elif sel == "dx":
-            return self.apodoxes_dxrist(**args)
-        elif sel == "ea":
-            return self.apodoxes_epadeias(**args)
-        elif sel == "aa":
-            return self.apodoxes_astheneias(**args)
-        elif sel == "apolysi":
-            return self.apozimiosi_apolysis(**args)
-        else:
-            raise ValueError(f"value {sel} for parameter sel is invalid")
+        seld = {
+            "ap": self.apodoxes_periodoy,
+            "dp": self.apodoxes_dpasxa,
+            "dx": self.apodoxes_dxrist,
+            "ea": self.apodoxes_epadeias,
+            "aa": self.apodoxes_astheneias,
+            "apolysi": self.apozimiosi_apolysis,
+        }
+        return seld[sel](**args)
 
 
 class Misthotos(Ergazomenos):

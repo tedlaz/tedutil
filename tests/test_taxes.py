@@ -70,3 +70,13 @@ class TestTaxes(TestCase):
         pliroteo = tx1.foros(2021, 3000, 0)["pliroteo"]
         self.assertEqual(pliroteo, Decimal("3000"))
         self.assertRaises(ValueError, tx1.foros, 1980, 15000, 1)
+
+    def test_class_foros2020(self):
+        clc = tx1.Foros2020()
+        self.assertEqual(clc.meiosi_foroy(15748.68), 702.03)
+        self.assertEqual(clc.meiosi_foroy(14664), 723.72)
+        self.assertEqual(clc.meiosi_foroy(19878.24), 619.44)
+        self.assertEqual(clc.foros_enoikion(2280), 342)
+        # print(clc.foros_total(19878.24, 2400, 10.62))
+        res = clc.foros_total(19878.24, 2400, 10.62)
+        self.assertEqual(res['final_foros'], 2797.36)

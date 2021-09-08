@@ -56,7 +56,7 @@ def test_hmeromisthios():
     assert ime.apodoxes_epadeias(150)["total"] == 384.8
     assert ime.apodoxes_epadeias(151)["total"] == 384.8
     assert ime.apodoxes_epadeias(300)["total"] == 384.8
-    with pytest.raises(ValueError):
+    with pytest.raises(KeyError):
         ime.selector('notValid')
 
 
